@@ -1,0 +1,546 @@
+    * {
+        /* align-items:center         */
+        /* background-color: black;
+        color: chartreuse; */
+        font-family: "Roboto Mono", monospace;
+    }
+    .fa-times:hover {
+        color: rgb(255, 25, 0);
+    }
+    .channel_img {
+        border-radius: 15px;
+        vertical-align: middle; /*maybe best inside of table so that text can start at the top */
+        width: 60px;
+        height: 60px
+    }
+    .channel_name {
+        vertical-align: middle
+    }
+    .stake_btn_container {
+        position: relative;
+        display: inline-block;
+        margin: 30px 0;
+    }
+    .glowing_button {
+        background-color: black;
+        color: chartreuse;
+        border-width: 3px;
+        border-color: rgb(200,255,180) rgb(127,255,0) 
+        rgb(80,160,40) rgb(20,130,30);
+        border-radius: 1px;
+    }
+    /* states:{logged in / ¤~} */
+    .stake_popup {
+        display: inline-block;
+        width: 700px;
+        height: 250px;
+        border-radius: 5px;
+        color: chartreuse;
+        border: 3px solid chartreuse;
+        position: absolute;
+        bottom: 60px;
+        left: 0px;
+        background-color: black;
+        visibility: hidden;
+        z-index: 2
+    }
+    /* .stake_btn .show {
+        visibility: visible
+    }
+    .stake_btn .hide {
+        visibility: hidden
+    } */
+    .stake_max_btn {
+        border: none;
+        background-color: black;
+        color: chartreuse;
+    }
+    .stake_max_btn:hover {
+        color: red;
+    }
+    .stake_popup input[type=range] {
+        width: 70px
+    }
+    .stake_popup input[type=range]::-moz-range-track {
+        background: chartreuse;
+        width: 100%;
+        height: 10px;
+        cursor: pointer;
+        box-shadow: 1px 1px 1px #000000;
+
+        border-radius: 5px;
+        border: 1px solid #000000;
+    }  
+    input[type=range]::-webkit-slider-thumb {
+        box-shadow: 1px 1px 1px #000000;
+        border: 1px solid #000000;
+        height: 30px;
+        width: 3px;
+        border-radius: 5px;
+        background: #FFFFFF;
+        cursor: pointer;
+        -webkit-appearance: none;
+        margin-top: -4px; /*make thinner & change slide fill color */
+    }
+    .stake_popup .stake_exit_btn {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        /* absolute positions apply to each other as in a tree struct def-d by their div struct */
+    }
+    .stake_exit_btn {
+        background-color: transparent;
+        border: none;
+        color:chartreuse;
+    }
+    .stake_popup_content {
+        margin-left: 20px;
+        margin-top: 15px;
+        font-size: 13px;
+        /* display: flex */
+    }
+    .td_left_spaced {
+        text-align: left;
+        padding: 10px 0 10px 0;
+        font-size: 16px;
+    }
+
+    .channel_stats table tr ~ td {
+        text-align: left;
+    }
+
+    .sidebar hr {
+        width: 100%;
+        margin-left: 0px
+    }
+
+    table th, td {
+        padding: 2px /*this does not work yet */
+    }
+
+    td + td {
+        text-align: center;
+    }
+    /* does not identify rowgroups */
+    .info_hover_anchor {
+        /* cursor: pointer; */
+        position: relative;
+        display: inline-block
+    }
+
+    .switch-channel-container {
+        display: flex; 
+        justify-content: flex-end; 
+        direction: ltr; 
+        align-items: center; 
+        margin-bottom: 20px;
+    }
+
+    .info_hover_anchor #info_hover_1 {
+        position: absolute;
+        bottom: 125%;
+        left: 0px;
+    }
+    /* relativizing pos does not work w outer eleme def-d by id */
+    .info_hover_anchor #info_hover_2 {
+        position: absolute;
+        bottom: 125%;
+        left: 0px;
+    }
+/* MT: replace these w scss loop */
+    .info_hover_anchor #info_hover_3 {
+        position: absolute;
+        bottom: 125%;
+        left: 0px;
+    }
+
+    .info_hover_anchor #info_hover_4 {
+        position: absolute;
+        bottom: 125%;
+        left: 0px;
+    }
+
+    .info_hover {
+        visibility: hidden;
+        display: inline;
+        background-color: #555;
+        color: #fff;
+        z-index: 1;
+        border-radius: 6px;
+        padding: 4px 5px;
+        font-size: small;
+        white-space: nowrap
+    }
+
+    .info_hover::after {
+        content: "";
+        position: absolute;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent;
+        border-width: 5px;
+        top: 100%;
+        left: calc(50% - 5px)
+    }
+    /* table padding doesnt work yet */
+    .stake_popup_content > tr > td {
+        white-space: nowrap;
+        padding: 10px;
+        
+    }
+
+    .stake_popup_content > tr {
+        padding-top: 30px;
+        padding-bottom: 50px
+    }
+
+    .sidebar {
+        /* width: 39%; */
+        float: left;
+        /* margin-left: 1%; */
+        position: relative;
+        grid-area: sidebar;
+        display: grid
+    }
+
+    .channel_stats table {
+        width: 100%
+    }
+
+    .main {
+        /* margin-right: 1%; */
+        width: 100%;
+        height: 100%;
+        /* vertical-align: middle; */
+        /* filling is to be removed */
+        /* text-align: center; */
+        background-color: rgba(0,0,0,0);
+        float: right;
+        display: grid;
+        grid-area: main;
+        /* padding: 60px 0 */
+    }
+
+    .chart {
+        height: 60vh;
+        width: 95%;
+        border-width: 10px;
+        border-color: rgb(127, 255, 0);
+        background-color:black;
+        color: chartreuse;
+    }
+
+    .chart_navbar {
+        z-index: 1;
+        background-color: rgba(0,0,0,0);
+        display: inline;
+        position: absolute;
+        right: 10px;
+        top: 7px;
+    }
+
+    .set_timefr {
+        border-radius: 3px;
+        border-color: rgb(200, 255, 180) rgb(127, 255, 0) 
+        rgb(80, 160, 40) rgb(10, 110, 10);
+        background-color: black;
+        color: chartreuse;
+    }
+
+    .container {
+        height: 100%;
+        grid-template-areas:
+        "header1 header2"
+        "sidebar main";
+        display: grid;
+        padding-left: 30px;
+        padding-right: 30px;
+        padding-top: 0px;
+        margin: 0;
+        width: calc(100% - 60px);
+        max-width: 100%;
+        grid-column-gap: 10px;
+        grid-row-gap: 0px;
+        grid-template-columns: 1fr 1fr;
+        float: unset;
+        background-color: black;
+        color: chartreuse;
+        /* display: flex;
+        flex-direction: row;
+        align-items: center;
+        vertical-align: middle; */
+    }
+
+    canvas {
+        color: chartreuse;
+    }
+
+    hr {
+        border-color: chartreuse;
+    }
+
+    .channel_stats {
+        position: relative;
+        /* TD: insert vertical-align or create subdiv w disp:flex & vert center */
+    }
+
+    .stats_flex{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        height: calc(100vh - 85px);
+        width: 100%;
+    }
+
+    .chart_flex {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        height: calc(100vh - 85px);
+        width: 100%;
+    }
+    .flex_row_inhibit {
+        width: 100%;
+    }
+    .theader > td + td {
+        text-align: center;
+    }
+    .theader {
+        font-weight: bolder;
+    }
+
+    table tr td:first-child {
+        text-align: left;
+        /* min-width: 25%;
+        max-width: 25%; */
+        /* max-width: 7em; */
+    }
+
+    /* table tr td ~ td {
+        min-width: 25%;
+        max-width: 25%;
+    } */
+
+    #static-attributes-header table tr td {
+        min-width: 25%;
+        max-width: 25%;
+        max-height: 30px;
+    }
+
+    table tr:first-child {
+        font-weight: bold;
+    }
+
+    .stake_btn_container table {
+        width: 80%;
+    }
+    .channel_stats table { /* I: this does not work with a <table> generated as a React component */
+        margin: 15px 0;
+        font-size: 13px;
+    }
+    .chart_wrap {
+        position: relative;
+        width: 100%;
+    }
+    .header-left, .header-right {
+        margin: 0px;
+        /* display: inline-block; */
+        /* display: grid */
+    }
+    :root {
+        --v_padding: 4px;
+        --v_border: 4px;
+    }
+    .header-right {
+        border-width: var(--v_border) var(--v_border) 
+        var(--v_border) 0; /* top right bottom left */
+        border-style: solid;
+        border-color: rgb(17, 16, 16);
+        background-color: black;
+        height: fit-content;
+        float: right;
+        text-align: right;
+        grid-area: header2;
+        width: calc(50% - var(--v_border));
+        padding: var(--v_padding) 0;
+    }
+    .header-left {
+        border-width: var(--v_border) 0 
+        var(--v_border) var(--v_border); /* top right bottom left */
+        border-style: solid;
+        border-color: rgb(17, 16, 16);
+        background-color: black;
+        float: left;
+        grid-area: header1;
+        text-align: left;
+        height: 25px;
+        width: calc(50% - var(--v_border));
+        height: 25px;
+        padding: var(--v_border) 0;
+    }
+    .fa-user, .fa-chart-line {
+        color: chartreuse;
+        font-size: 24px;
+    }
+    .space {
+        display: inline-block;
+        width: 20px;
+    }
+    body {
+        margin: 0;
+    }
+    .container2 {
+        width: 100%;
+    }
+    #static-attributes {
+        width: 100%;
+    }
+    #username {
+        background-color: rgba(0,0,0,0);
+        display: inline;
+        width:fit-content;
+        color: chartreuse;
+        font-size: 15px;
+        border-width: 0px;
+        padding: 0px;
+        width: 140px;
+    }
+    .container .input[type=text] {
+        border-radius: 3px;
+        background-color: rgb(5,5,5);
+        color: rgb(19,168,19);
+    }
+    .input_wm {
+        display: inline-block;
+        position: relative;
+        margin: 7px 0;
+        font-weight: bold;
+    }
+    .input_wm > input[type=text] {
+        padding-left: 6px;
+        background-color: rgb(5, 5, 15); 
+        border-radius: 3px; 
+        color: rgb(19, 168, 19);
+    }
+    .channel_stats input[type=text] {
+        background-color: rgb(5, 5, 15); 
+        border-radius: 3px; 
+        color: rgb(19, 168, 19);
+        text-align: right;
+    }
+    .wm {
+        font-size: 14px;
+        color: rgba(210, 50, 70, 0.8);
+        top: 3px;
+    }
+    #input_wm1 #wm1 {
+        position: absolute;
+        left: 20px;
+        bottom: 50px;
+        display: inline;
+    }
+    #input_wm2 #wm2 {
+        position: absolute;
+        left: 20px;
+        bottom: 50px;
+        display: inline;
+    }
+    #stats_score, #stats_date {
+        float: middle;
+        width: 100px;
+    }
+
+    /* will it stay on narrow view setup after increasing scr with again? */
+    /* if yes, add new option @media  */
+    @media screen and (max-width: 800px), 
+    (orientation: portrait) {
+        .container {
+            display: revert;
+        }
+        /* remove vert padding around blocks */
+        .sidebar {
+            float: revert;
+        }
+        .main {
+            float: revert;
+        }
+        .stats_flex, .chart_flex {
+            height: auto;
+            padding: 10px 0;
+        }
+        .chart {
+            height: 60vh;
+            /* width: auto; */
+        }
+    }
+    @media (orientation: portrait) {
+        .chart {
+            height: 40vh;
+        }
+    }
+    .overlay {
+        background-color: rgb(27, 211, 122);
+        position: fixed;
+        top: 0px;
+        bottom: 0px;
+        height: 100%;
+        width: 100%;
+        z-index: 2;
+        visibility: visible;
+    }
+    .overlay_centre_img {
+        top: calc(50% - 24px); /*subtract half of hourglass height*/
+        left: calc(50% - 18px);
+        height: 48px !important;
+        width: 36px !important;
+        position: absolute;
+        display: flex;
+        vertical-align: middle;
+        justify-content: center;
+    }
+    .fa-hourglass-half {
+        font-size: 36px;
+    }
+    .fa-hourglass-half:before {
+        animation-name: loading;
+        animation-duration: 0.8s;
+        animation-iteration-count: infinite;
+    }
+    @keyframes loading {
+        0% {
+            content: "\f251"
+        }
+        33.3% {
+            content: "\f252"
+        }
+        66.7% {
+            content: "\f253"
+        }
+        100% {
+            content: "\f251"
+        }
+    }
+
+    /* @media screen and (min-width: 801px), 
+    (orientation: landscape) {
+        .container {
+            display: grid;
+        }
+        .sidebar {
+            float: left;
+        }
+        .main {
+            float: right;
+        }
+        .stats_flex, .chart_flex {
+            height: calc(100vh - 18px);
+            padding: 0;
+        }
+        .chart {
+            height: 60vh;
+        }
+    } */
+    /* @media screen and (min-width: 801px) {
+        .container {
+            display: grid;
+        }
+    } */

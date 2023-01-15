@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta charset="utf-8" />
+		<title>Contribution platform</title>
+		<script src="https://kit.fontawesome.com/db0ee32f8e.js" crossorigin="anonymous"></script>
+	</head>
+	<style>
+		:root {
+			--popup_pos: 0px;
+			--bg_color: red;
+		}
+		.sidenav {
+			height: 100%;
+			width: 160px;
+			position: fixed;
+			z-index: 1;
+			top: 0;
+			left: 0;
+			background-color: #161;
+			overflow-x: hidden;
+			padding-top: 20px;
+		}
+		.main {
+			margin-left: 160px; /* Same as the width of the sidenav */
+			font-size: 28px; /* Increased text to enable scrolling */
+			padding: 0px 10px;
+			background-color: var(--bg_color);
+		}
+		.container_st {
+			visibility: hidden;
+		}
+		.popup_trigger {
+			left: 200.5px;
+			position: relative;
+			display: inline;
+			text-align: center;
+		}
+		.popup_trigger .popup_st {
+			/* visibility: hidden; */
+			display: inline;
+			background-color: #555;
+			color: #fff;
+			position: absolute;
+			bottom: 125%;
+			left: 50%;
+			z-index: 1;
+			border-radius: 6px;
+			padding: 4px 5px;
+			font-size: small;
+			white-space: nowrap;
+		}
+		.flex_parent {
+			display: flex;
+			background-color: yellowgreen;
+			flex-direction: row;
+			height: 200px;
+			width: 100%;
+			align-items: center;
+			/* justify-content: center */
+		}
+		.flex_parent > .flex_child {
+			background-color: tomato;
+			height: 20px;
+			width: 60%;
+		}
+		.flex_child2 {
+			background-color: blueviolet;
+			height: 50px;
+			width: 40%;
+		}
+		/* div .popup_st {
+        left: 50%
+    } */
+		.popup_trigger .popup_st::after {
+			content: "";
+			position: absolute;
+			border-style: solid;
+			border-color: #555 transparent transparent transparent;
+			border-width: 5px;
+			top: 100%;
+			left: 50%;
+		}
+		.overlay {
+			background-color: rgba(156, 202, 89, 0.5);
+			width: 100%;
+			height: 100%;
+			position: fixed;
+			top: 0px;
+			visibility: hidden;
+		}
+		.fa-hourglass-start:before {
+			animation-name: pulse;
+			animation-duration: 2s;
+			animation-iteration-count: infinite;
+		}
+		@keyframes pulse {
+			0% {
+				content: "\f251";
+			}
+			50% {
+				content: "\f252";
+			}
+		}
+		.test1 {
+			height: 100px;
+			width: 130px;
+			background-color: aqua;
+			border-width: 18px;
+			border-style: solid;
+			border-color: white rgb(92, 192, 196) rgb(7, 7, 94) blue; /* do w lin grads!!!! */
+		}
+		.input_wm {
+			display: inline-block;
+			position: relative;
+		}
+		input[type="text"] {
+			padding-left: 10px;
+		}
+		#input1 #wm1 {
+			position: absolute;
+			left: 60px;
+			bottom: 50px;
+			display: inline;
+		}
+		#input2 #wm2 {
+			position: absolute;
+			left: 20px;
+			bottom: 50px;
+			display: inline;
+		}
+		.wm {
+			font-size: 14px;
+			color: rgba(210, 50, 70, 0.8);
+			top: 14px;
+		}
+		#grad {
+			/* background-image: radial-gradient(closest-side at 60% 55%, blue, green, yellow, black); */
+			animation-name: indep;
+			animation-duration: 2s;
+			animation-iteration-count: infinite;
+			height: 100px;
+			width: 300px;
+		}
+		@keyframes indep {
+			0% {
+				background-image: radial-gradient(
+					farthest-corner at 60px 30px,
+					/* 1st is {right}, 2nd is {down} pos fr top-left corner*/ rgba(0, 0, 0, 0) 0%,
+					yellow 0%,
+					rgba(0, 0, 0, 0) 10%
+				); /*valami ehhez hasonló, részben opaque-et szeretnék rátenni a gombokra kurzor határára*/
+			}
+			20% {
+				background-image: radial-gradient(
+					farthest-corner at 60px 30px,
+					/* 1st is {right}, 2nd is {down} pos fr top-left corner*/ rgba(0, 0, 0, 0) 0%,
+					yellow 5%,
+					rgba(0, 0, 0, 0) 20%
+				); /*valami ehhez hasonló, részben opaque-et szeretnék rátenni a gombokra kurzor határára*/
+			}
+			40% {
+				background-image: radial-gradient(
+					farthest-corner at 60px 30px,
+					/* 1st is {right}, 2nd is {down} pos fr top-left corner*/ rgba(0, 0, 0, 0) 0%,
+					yellow 10%,
+					rgba(0, 0, 0, 0) 30%
+				); /*valami ehhez hasonló, részben opaque-et szeretnék rátenni a gombokra kurzor határára*/
+			}
+			60% {
+				background-image: radial-gradient(
+					farthest-corner at 60px 30px,
+					/* 1st is {right}, 2nd is {down} pos fr top-left corner*/ rgba(0, 0, 0, 0) 0%,
+					yellow 17%,
+					rgba(0, 0, 0, 0) 40%
+				); /*valami ehhez hasonló, részben opaque-et szeretnék rátenni a gombokra kurzor határára*/
+			}
+			80% {
+				background-image: radial-gradient(
+					farthest-corner at 60px 30px,
+					/* 1st is {right}, 2nd is {down} pos fr top-left corner*/ rgba(0, 0, 0, 0) 0%,
+					yellow 25%,
+					rgba(0, 0, 0, 0) 50%
+				); /*valami ehhez hasonló, részben opaque-et szeretnék rátenni a gombokra kurzor határára*/
+			}
+			100% {
+				background-image: radial-gradient(
+					farthest-corner at 60px 30px,
+					/* 1st is {right}, 2nd is {down} pos fr top-left corner*/ rgba(0, 0, 0, 0) 0%,
+					yellow 35%,
+					rgba(0, 0, 0, 0) 60%
+				); /*valami ehhez hasonló, részben opaque-et szeretnék rátenni a gombokra kurzor határára*/
+			}
+		}
+		#pos_listen {
+			height: 150px;
+			width: 300px;
+			background-color: #161;
+			display: inline;
+		}
+		/* TD: animation of growing lin grads -> D: permanently yield cursor xy -> D: print cursorXY when mouse enters div & rel to the div's "0" location -> make the grad anim 1* when cursor enters 
+        -> ~ always w/ entering during the anim -> when entering during, it sh reset & start fr the beg -> attach this to a button -> design */
+		/* TD: grad src sh follow mouse if hovering over div */
+		/* mouseenter/leave listeners */
+		/* on enter: cr.pos - (grad.boundrect().left|top + scrollX|Y) => grad */
+		/* TD: animation sh reset after cursor leaving div area */
+		/* TD: grad anim sh gradually advance after cursor entering div area & reset size after moving cr to new loc */
+		/* TD: layering: button w corners < partially opaque grad disp-g hover anim < button when|after clicked disp */
+		/* TD: hover effect sh disappear after clicking & not return until btn is active again */
+		/* TD: insert into channel_i */
+	</style>
+	<!-- bottom margin for text w/i input to be in line w wm -->
+	<body>
+		<div class="sidenav">
+			<a href="#">About</a>
+			<a href="#">Services</a>
+			<a href="#">Clients</a>
+			<a href="#">Contact</a>
+			<p>vajon ez látszik-e</p>
+		</div>
+
+		<div class="main">
+			<div id="grad"></div>
+			<div id="pos_listen"></div>
+			<div id="enter_anim"></div>
+			<input type="text" id="cursorX" size="3" /> X-position of the mouse cursor <br /><br />
+			<input type="text" id="cursorY" size="3" /> Y-position of the mouse cursor
+			<div class="test1"></div>
+			<div style="height: 100px"></div>
+			<div>
+				<div class="input_wm" id="input1">
+					<input type="text" />
+					<div class="wm" id="wm1">USD</div>
+				</div>
+				<br />
+				<div class="input_wm" id="input2">
+					<input type="text" />
+					<div class="wm" id="wm2">USD</div>
+				</div>
+			</div>
+			<p>Működsz?</p>
+			<table>
+				<th>ez így lesz tényleg egy tábla</th>
+				<tr>
+					<td>vajon elkezdi-e a táblát azután hogy belerondítottam egy listával</td>
+					<!-- hát nem; ha a táblába bármi mást rakok, utána a tábla nem fog normálisan kinézni -->
+					<td>második cella</td>
+				</tr>
+			</table>
+			<img src="./121990371-business-people-working-with-laptop.jpg" width="75%" />
+			<p>Ez nem lesz színes<span style="color: blueviolet">ez viszont igen</span>ez megint nem</p>
+			<!-- ne felejtsd el hogy ha már elkezdtél divekben írni, utána egy diven kívüli elem nem fog beleilleni a struktúrába, nem ott fog megjelenni ahova kód.pos szt írtad hanem a tetején -->
+			<label for="range_1">Csúszka</label>
+			<input type="range" id="range_1" />
+			<label for="tb_1">Ide szöveget lehet írni</label>
+			<input type="text" id="tb_1" />
+			<label for="but_1">Nyomj meg</label>
+			<input type="button" id="but_1" name="Címke rajta" width="100px" />
+			<button id="to_show">Erre kiteszi a szöveget</button>
+			<div id="container" class="container_st">
+				<svg height="130" width="500">
+					<defs>
+						<linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+							<stop offset="0%" style="stop-color: rgb(255, 255, 0); stop-opacity: 1" />
+							<stop offset="100%" style="stop-color: rgb(255, 0, 0); stop-opacity: 1" />
+						</linearGradient>
+						<!--ezzel lehet színátmenetet csinálni-->
+					</defs>
+					<ellipse cx="100" cy="70" rx="85" ry="55" fill="url(#grad1)" />
+					<text fill="#ffffff" font-size="45" font-family="Verdana" x="50" y="86">SVG</text>
+				</svg>
+				<button id="to_hide">Tűnj el</button>
+			</div>
+			<p>
+				<label for="tb_2">Textbox</label>
+				<input type="text" id="tb_2" value="akjbkjab" disabled />
+			</p>
+			<!-- ha nem p-be rakom akkor egymás mellé kerülnek az elemek -->
+			<span class="popup_trigger"
+				><i class="fas fa fa-info-circle"></i>
+				<div style="display: inline">
+					<div class="popup_st" id="popup_id">
+						<div class="popup_content">
+							<span>try popup asnsjkdvnsk svajnjskn</span>
+						</div>
+					</div>
+				</div>
+			</span>
+			<div class="flex_parent">
+				<div class="flex_child"></div>
+				<div class="flex_child2"></div>
+			</div>
+			<div>
+				<i class="fas fa-hourglass-start"></i>
+			</div>
+		</div>
+		<div class="overlay"></div>
+	</body>
+	<script>
+		function getCursorXY(e) {
+			document.getElementById("cursorX").value = window.Event
+				? e.pageX
+				: event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
+			document.getElementById("cursorY").value = window.Event
+				? e.pageY
+				: event.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
+		}
+		function yieldCursorXY(e) {
+			return {
+				left: window.Event
+					? e.pageX
+					: event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft),
+				top: window.Event
+					? e.pageY
+					: event.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop),
+			};
+		}
+		window.onload = function () {
+			if (window.Event) {
+				document.captureEvents(Event.MOUSEMOVE);
+			}
+			document.onmousemove = getCursorXY;
+
+			document.getElementById("grad").addEventListener("mouseenter", enter_grad("grad"));
+			document.getElementById("grad").addEventListener("mouseleave", leave_grad);
+			for (wm of [...document.getElementsByClassName("wm")]) {
+				wm.style.left =
+					(Number(getComputedStyle(wm.parentNode).width.slice(0, getComputedStyle(wm.parentNode).width.length - 2)) - 33).toString() + "px";
+			}
+		};
+		var rt = document.querySelector(":root");
+		let sleep = (ms) => {
+			return new Promise((resolve) => setTimeout(resolve, ms));
+		};
+		sleep(1000).then(() => {
+			rt.style.setProperty("--bg_color", "white");
+		});
+		//TD: get class=popup... elements into array -> loop through, get width, and set absolute (pos)left to 1/2 of val -> use .style.setprop
+		// sleep(5).then(() => {
+		//     rt.style.setProperty('--bg_color', 'white')
+		// })
+		document.getElementById("to_show").addEventListener("click", show);
+		document.getElementById("to_hide").addEventListener("click", hide);
+		function show() {
+			document.getElementById("container").style.visibility = "visible";
+		}
+		function hide() {
+			document.getElementById("container").style.visibility = "hidden";
+		}
+		//document.getElementById('popup_id').getBoundingClientRect()["width"]
+		var over_grad = false;
+		function enter_grad(el_id) {
+			return () => {
+				over_grad = true;
+				div_specs = document.getElementById(el_id).getBoundingClientRect();
+				console.log(document.getElementById("cursorX").value - div_specs["x"], document.getElementById("cursorY").value - div_specs["y"]);
+				// while (over_grad == true) { #finish to always follow cursor while w/i div; over_grad sh go into a dict where key = `id` & val = {bool}
+				var curr_grad_offset = getOffset(document.getElementById(el_id));
+			};
+		}
+		function leave_grad() {
+			over_grad = false;
+		}
+		function getOffset(el) {
+			const rect = el.getBoundingClientRect();
+			return {
+				left: rect.left + window.scrollX,
+				top: rect.top + window.scrollY,
+			};
+		}
+	</script>
+</html>
