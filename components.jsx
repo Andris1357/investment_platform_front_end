@@ -1,4 +1,6 @@
-// import {useState} from 'react';
+import * as Data from "./data.js"
+// import ChartComponent from "./ChartComponent.jsx";
+
 
 class RenderedComponent {
     constructor (component_, anchor_element_id_) {
@@ -7,106 +9,195 @@ class RenderedComponent {
     }
 }
 
-class InvestmentAttribute {
-    constructor(label_, value_) {
-        this.label = label_;
-        this.value = value_;
-    }
-}
-
-class Investment {
-    constructor(investment_id_, time_until_lock_expires_, invested_tokens_, current_value_) {
-        this.investment_id = investment_id_;
-        this.time_until_lock_expires = time_until_lock_expires_;
-        this.invested_tokens = invested_tokens_;
-        this.current_value = current_value_;
-    }
-}
-
-class Metric {
-    constructor(label_, individual_value_, universe_average_, individual_modifier_) {
-        this.label = label_;
-        this.individual_value = individual_value_;
-        this.universe_average = universe_average_;
-        this.individual_modifier = individual_modifier_;
-    }
-}
-
-class Channel {
-    constructor(
-        name_,
-        score_, 
-        subscriber_count_, 
-        currently_staking_, 
-        subscriber_count_change_, 
-        views_count_change_,
-        uploads_count_change_,
-        platform_score_change_,
-    ) {
-        this.name = name_;
-        this.score = score_;
-        this.subscriber_count = subscriber_count_;
-        this.currently_staking = currently_staking_;
-        this.subscriber_count_change = subscriber_count_change_;
-        this.views_count_change = views_count_change_;
-        this.uploads_count_change = uploads_count_change_;
-        this.platform_score_change = platform_score_change_;
-    }
-}
-
-const investments = [ // LT: sh come from DB
-    new Investment(
-        "0x4b68d3f5e32e051cd9b9d3b3a3c6e7e6f1a1b2c2d3e3f4b5c5d6e7f8",
-        new InvestmentAttribute("Time until lock expires", "6d 7h 19m"),
-        new InvestmentAttribute("Invested tokens", 335927),
-        new InvestmentAttribute("Current value", 482934)
-    ),
-    new Investment (
-        "0x9a8b7c6d5e4f3g2h1i9a8b7c6d5e4f3g2h1i9a8b7c6d5e4f3g2h1i9",
-        new InvestmentAttribute("Time until lock expires", "2mo 16d 23h 08m"),
-        new InvestmentAttribute("Invested tokens", 20734),
-        new InvestmentAttribute("Current value", 17836)
-    ),
-];
-
-const channels = [
-    new Channel(
-        "Channel A",
-        1.4804627,
-        new Metric("Subscriber count", 125318, 279214, "+2.85%"),
-        new Metric("Currently staking", 9738, 620, "-10.58%"),
-        new Metric("Change in subscriber count", "+0.81%", "+0.28%", "+1.5%"),
-        new Metric("Change in count of total views", "+0.91%", "+0.38%", "+4.27%"),
-        new Metric("Change in count of uploads", 8, 3.71, "+11.38%"),
-        new Metric("Change of platform score", "+8.46%", "-0.67%", "-2.38%"),
-    ),
-    new Channel(
-        "Channel B",
-        1.8936851,
-        new Metric("Subscriber count", 66389, 279214, "+2.85%"),
-        new Metric("Currently staking", 148, 620, "+0.59%"),
-        new Metric("Change in subscriber count", "+20.53%%", "+0.28%", "+46.4%"),
-        new Metric("Change in count of total views", "+0.91%", "+0.38%", "+4.27%"),
-        new Metric("Change in count of uploads", 17, 3.71, "+14.95%"),
-        new Metric("Change of platform score", "+22.7%", "-0.67%", "-13.64%"),
-    ),
-];
-
-const last_updated = "2021.09.30"; // LT: query fr DB
-let current_timeframe = "1 year"; // TD: ßuseState => have this change b.o. what btn was clicked last
-
-const metric_category_style = { // !: <span>.padding does not transfer to parent::<td>.padding
-    minHeight: "50px", // /\: padding does not work -> try sth else | remove sub-titles
-    maxHeight: "50px",
-    fontSize: "16px", 
-    textDecoration: "underline",
-    fontWeight: "bold",
-};
-const hover_message_style = {position: "absolute", bottom: "125%", left: "-20px"};
-const space_style = {display: "inline-block", width: "10px"};
-
 function getInvestmentById(id_) {
-    return investments.filter(object_ => object_.investment_id == id_)[0]
+    return Data.investments.filter(object_ => object_.investment_id == id_)[0]
+}
+
+function clickVisibilityEventListener(anchor_id_, target_id_, visibility_, useStateCallable_=null) {
+    let callable = () => {
+        document.getElementById(target_id_).style.visibility = visibility_ ? "visible" : "hidden"
+        if (useStateCallable_ !== null) {
+            useStateCallable_();
+        }
+    };
+    document.getElementById(anchor_id_).addEventListener("click", callable);
+}
+
+function hoverUseStateEL(element_id_, useStateCallable_) {
+    document.getElementById(element_id_).addEventListener("mouseenter", () => useStateCallable_(true));
+    document.getElementById(element_id_).addEventListener("mouseleave", () => useStateCallable_(false));
+}
+
+function getIconIndex(element) {
+    return element.tagName == this; //findIndex takes second opt arg as to be substituted for used func's ßthis ref
+}
+
+function getSelectedChannelIndex() {
+    let current_channel_id = [...document.getElementsByClassName("channel-container")][0].id;
+    return Number(current_channel_id[current_channel_id.indexOf("-container") - 1])
+}
+
+function wrapChartElement() {
+    const context = document.getElementById("index_chart_canvas").getContext("2d");
+
+    return new Chart(context, {
+        type: "line",
+        data: {
+            labels: Data.labels_current, //omit labels for part of values, so th they can fit on screen -> about 7-10; how to make a label blank?; will this get updated along w values?
+            datasets: [
+                {
+                    label: "Changes in index of [] channel", //mellette info ikon -> "The chart will show index fluctuations over a recent interval, the span of which can be selected on the top right"
+                    data: Data.channels[getSelectedChannelIndex()].score_timeseries, //TD: chg to arr.slice (1d) or other to be default
+                    backgroundColor: ["rgba(0,0,0,0.95)"],
+                    borderColor: ["rgba(255, 99, 132, 1)"],
+                    color: ["rgba(127,255,0,1)"],
+                },
+            ],
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            pointRadius: 0.1,
+            borderWidth: 1.5,
+            backgroundColor: "rgba(0,0,0,0.95)",
+            scales: {
+                x: {ticks: {
+                    maxTicksLimit: 8,
+                    autoSkip: true,
+                    maxRotation: 90,
+                    minRotation: 90,
+                }},
+            },
+        },
+    });
+}
+
+const ChartComponent = () => {
+    const [index_chart, changeChart] = React.useState();
+    const [selected_timeframe, selectTimeframe] = React.useState("8760");
+    const [current_labels, setLabels] = React.useState(Data.labels_current)
+    const [chart, setChart] = React.useState();
+    const [selected_timeseries, setTimeseries] = React.useState();
+
+    const chart_ref = React.useRef();
+
+    React.useEffect(() => {
+        if (index_chart) {
+            console.log(`${selected_timeframe}`)
+            console.log(`${index_chart.data.labels}`)
+            index_chart.data.labels = Data.labels_3_5
+            index_chart.update()
+        }
+    }, [selected_timeframe])
+
+    const updateChart = React.useCallback((event_) => { // TD: rewrite value & color checks to hooks
+        selectTimeframe(event_.target.value);
+        let timeseries = Data.channels[getSelectedChannelIndex()].score_timeseries;
+        console.log(`timeseries index: ${getSelectedChannelIndex()}\ndata:\n${timeseries.slice(0, 30)}`)
+    
+        console.log(`computed style: ${getComputedStyle(event_.target).color}`)
+        if (getComputedStyle(event_.target).color == "rgb(127, 255, 0)") {
+            console.log(`button value: ${event_.target.value}`)
+            //check if color is rgb[chartr]
+            if (event_.target.value == "0") {
+                console.log(`chart element: ${index_chart}`)
+                changeChart({
+                    ...index_chart, 
+                    data: {
+                        ...index_chart.data, 
+                        datasets: {
+                            labels: Data.labels_1_3,
+                            datasets: [{
+                                ...index_chart.data.datasets[0], 
+                                data: timeseries
+                            }]
+                        }
+                    }
+                })
+                console.log(`chart element: ${index_chart}`)
+                index_chart.data.datasets[0].data = timeseries; // TD: THIS WILL NEVER WORK WITH ßUSESTATE VAR -> NEW HOOK HERE!
+                setLabels(Data.labels_1_3);
+                index_chart.data.labels = [...current_labels];
+                //change color to reflect chosen status + change color of all other buttons in the group to deft
+            } else {
+                setLabels(
+                    event_.target.value == "24" || event_.target.value == "168" 
+                        ? Data.labels_4_5 
+                        : event_.target.value == "720" 
+                            ? Data.labels_3_5 
+                            : Data.labels_1_3
+                );
+                
+                switch (event_.target.value) {
+                    case "24":
+                        setLabels(Data.labels_4_5);
+                        break;
+                    case "168":
+                        setLabels(Data.labels_3_5);
+                        break;
+                    case "720":
+                        setLabels(Data.labels_2_3);
+                        break;
+                    default:
+                        setLabels(Data.labels_1_3);
+                }
+                console.log(index_chart)
+
+                index_chart.data.datasets[0].data = timeseries.slice(
+                    timeseries.length - Number(event_.target.value) / Data.index_update_frequency, 
+                    timeseries.length
+                ); //TD: w real time -> for last 24 hours, get last 24/freq points
+                index_chart.data.labels = [...current_labels].slice(
+                    [...current_labels].length - Number(event_.target.value) / Data.index_update_frequency, 
+                    timeseries.length
+                );
+            }
+
+            event_.target.style.color = "rgb(255, 60, 0)";
+            event_.target.style.borderColor = "rgb(255, 180, 180) rgb(245, 130, 70) rgb(180, 20, 20) rgb(210, 40, 35)";
+            //TD: do the labels chg respective to the x values shrinking? -> labels do not chg & x-values do not blow up to fill chart
+            
+            for (let timeframe_button_ of [...document.getElementsByClassName("set_timefr")]) {
+                if (timeframe_button_.value == event_.target.value) {
+                    continue;
+                } else {
+                    timeframe_button_.style.color = "rgb(127, 255, 0)"; //chg to deft color (substitute w finally selected deft)
+                    timeframe_button_.style.borderColor = "rgb(200, 255, 180) rgb(127, 255, 0) rgb(80, 160, 40) rgb(10, 110, 10)";
+                }
+            }
+            index_chart.update();
+        }
+    }, []);
+
+    const selectButton = React.useCallback((event_) => {
+        console.log(`button: ${event_.target}`)
+    }, [])
+    
+    React.useEffect(() => {
+        changeChart(wrapChartElement());
+        console.log(`CHART ELEMENT AFTER INIT: ${index_chart}`)
+    }, []);
+    
+    return (
+        <div class="chart_wrap">
+            <canvas class="chart" id="index_chart_canvas"></canvas>
+            <div class="chart_navbar">
+                <button class="set_timefr" id="tf_d" value="24" onClick={updateChart}>1d</button>
+                <button class="set_timefr" id="tf_w" value="168" onClick={updateChart}>1w</button>
+                <button class="set_timefr" id="tf_m" value="720" onClick={updateChart}>1m</button>
+                <button
+                    class="set_timefr"
+                    id="tf_y"
+                    value="8760"
+                    style={Data.chart_button_selected_style}
+                    onClick={updateChart}
+                >
+                    1y
+                </button>
+                <button class="set_timefr" id="tf_a" value="0" onClick={updateChart}>All</button>
+            </div>
+        </div>
+    )
 }
 
 const Table = ({rows_content}) => { // P: @rows_content :: str|num[][]
@@ -134,7 +225,7 @@ const TableRow = ({cells_data}) => {
     }
     if (cells_data.slice(1,).every(cell_content_ => cell_content_ === "")) {
         return (
-            <td colspan={4} style={metric_category_style}>{cells_data[0]}</td>
+            <td colspan={4} style={Data.metric_category_style}>{cells_data[0]}</td>
         )
     }
     return (
@@ -145,7 +236,7 @@ const TableRow = ({cells_data}) => {
 }
 
 const InvestmentDetailsTable = () => {
-    const [selected_investment_id, selectInvestment] = React.useState(investments[0].investment_id);
+    const [selected_investment_id, selectInvestment] = React.useState(Data.investments[0].investment_id);
     let investment = getInvestmentById(selected_investment_id);
     
     return (
@@ -163,18 +254,18 @@ const InvestmentDetailsTable = () => {
     )
 }
 
-const ChannelDetailsTable = ({}) => {
+const ChannelDetailsTable = () => {
     const [selected_channel_index, selectChannel] = React.useState(0);
     document.getElementById("button-next").addEventListener("click", () => {
-		selectChannel(current_index_ => current_index_ < channels.length - 1 ? current_index_ + 1 : current_index_);
+		selectChannel(current_index_ => current_index_ < Data.channels.length - 1 ? current_index_ + 1 : current_index_);
 	})
     document.getElementById("button-prev").addEventListener("click", () => {
         selectChannel(current_index_ => current_index_ >= 1 ? current_index_ - 1 : current_index_)
     })
-    let channel = channels[selected_channel_index];
+    let channel = Data.channels[selected_channel_index];
 
     return (
-        <div>
+        <div class="channel-container" id={`channel-${selected_channel_index}-container`}>
             <p style={{fontSize: "18px"}}><strong>Channel statistics</strong></p>
             <hr />
             <Table rows_content={[
@@ -184,14 +275,14 @@ const ChannelDetailsTable = ({}) => {
                 ],
                 [
                     React.createElement("label", {for: "stats-date"}, "Last updated"), 
-                    <DisabledTextbox element_id_={"stats-date"} value_={last_updated}/>
+                    <DisabledTextbox element_id_={"stats-date"} value_={Data.last_updated}/>
                 ]
             ]} style={{fontSize: "13px"}}/>
             <hr />
             <Table rows_content={[
                 [" ", "Individual value", "Universe average", "Individual index modifier"], 
                 [
-                    React.createElement("span", {style: metric_category_style}, "Static metrics"), "", "", ""
+                    React.createElement("span", {style: Data.metric_category_style}, "Static metrics"), "", "", ""
                 ],
                 ...([
                     channel.subscriber_count, 
@@ -203,7 +294,7 @@ const ChannelDetailsTable = ({}) => {
                     <CategoryWithInfo 
                         label_text_={"Dynamic metrics"} 
                         info_id_={1} 
-                        info_text_={`The period over which changes are measured is ${current_timeframe}`}
+                        info_text_={`The period over which changes are measured is ${Data.current_timeframe}`}
                     />,
                     "", "", ""
                 ],
@@ -223,7 +314,7 @@ const ChannelDetailsTable = ({}) => {
 const InvestmentDropdown = ({onChange_, value_}) => {
     return ( // /\: truncate dropdown width
         <select onChange={onChange_} value={value_}>
-            {investments.map(investment_ => (
+            {Data.investments.map(investment_ => (
                 <option>{investment_.investment_id}</option>
             ))}
         </select>
@@ -248,32 +339,27 @@ const InfoHoverIcon = ({info_id_, info_text_}) => {
 const CategoryWithInfo = ({label_text_, info_id_, info_text_}) => {
     return (
         <nobr><span>
-            <span style={metric_category_style}>{label_text_}</span>
-            <span style={space_style}></span>
+            <span style={Data.metric_category_style}>{label_text_}</span>
+            <span style={Data.space_style}></span>
             <InfoHoverIcon info_id_={info_id_} info_text_={info_text_}/>
         </span></nobr>
     )
-}
+} // LT: search bar (in popup?) ß channels -> render list of coinciding ones & switch to selected on submit
 
-function clickVisibilityEventListener(anchor_id_, target_id_, visibility_, useStateCallable_=null) {
-    let callable = () => {
-        document.getElementById(target_id_).style.visibility = visibility_ ? "visible" : "hidden"
-        if (useStateCallable_ !== null) {
-            useStateCallable_();
-        }
-    };
-    document.getElementById(anchor_id_).addEventListener("click", callable);
-}
-
-function hoverUseStateEL(element_id_, useStateCallable_) {
-    document.getElementById(element_id_).addEventListener("mouseenter", () => useStateCallable_(true));
-    document.getElementById(element_id_).addEventListener("mouseleave", () => useStateCallable_(false));
-}
-
-function getIconIndex(element) {
-    return element.tagName == this; //findIndex takes second opt arg as to be substituted for used func's ßthis ref
-}
-// LT: search bar (in popup?) ß channels -> render list of coinciding ones & switch to selected on submit
+const rendered_components = [
+    new RenderedComponent(
+        <InvestmentDetailsTable/>,
+        document.getElementById('test-table')
+    ),
+    new RenderedComponent(
+        <ChannelDetailsTable/>,
+        document.getElementById("static-attributes")
+    ),
+    new RenderedComponent(
+        <ChartComponent/>,
+        document.getElementById("chart-flexbox")
+    )
+]
 
 const App = () => {
     const [investments_popup_visibility, investmentsPopupVisible] = React.useState(false);
@@ -348,29 +434,18 @@ const App = () => {
         }
     }, [body_clicked])
     
+    for (let component_ of rendered_components) {
+        ReactDOM.render(component_.component, component_.anchor_element_id);
+    }
     document.getElementById("overlay_id").style.setProperty("visibility", "hidden"); // LT: only become hidden /\ both ~ & js script loaded -> component th has custom attr ß storing whether some script loaded (prob ~ bc ~::first)
 }
 // TD: <PRIORITY> randomize a time series ß universe average -> change table::$channel <= ?timefr sel-d
     // - create chart component in React
     // - pass current channel timeseries on re-render <= const in scope°°App()
-const rendered_components = [
-    new RenderedComponent(
-        <InvestmentDetailsTable/>,
-        document.getElementById('test-table')
-    ),
-    new RenderedComponent(
-        <App/>,
-        document.getElementById("root")
-    ),
-    new RenderedComponent(
-        <ChannelDetailsTable/>,
-        document.getElementById("static-attributes")
-    ),
-]
-
-for (let component_ of rendered_components) {
-    ReactDOM.render(component_.component, component_.anchor_element_id);
-}
+ReactDOM.render(
+    <App/>,
+    document.getElementById("root")
+)
 
 const info_timeseries = [...document.getElementsByClassName("info_hover_anchor")];
 

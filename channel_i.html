@@ -3,6 +3,8 @@
 	<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 	<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 	<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+	<script type="module" src="./data.js"></script>
+	<!-- <script type="text/babel" data-type="module" src="./ChartComponent.jsx"></script> -->
 	<script type="text/babel" data-type="module" src="components.jsx"></script>
 	<head>
 		<meta charset="utf-8" />
@@ -146,26 +148,8 @@
 			</aside>
 			<!-- vertical align middle doesnt work, padding seems to deattach buttons from chart and their position for some reason cannot be relativized to chart (inner) div -->
 			<section class="main">
-				<div class="chart_flex">
-					<div class="chart_wrap">
-						<canvas class="chart" id="index_chart_canvas"></canvas>
-						<div class="chart_navbar">
-							<button class="set_timefr" id="tf_d" value="24">1d</button>
-							<button class="set_timefr" id="tf_w" value="168">1w</button>
-							<button class="set_timefr" id="tf_m" value="720">1m</button>
-							<!--count w 30 days to simplify-->
-							<button
-								class="set_timefr"
-								id="tf_y"
-								value="8760"
-								style="color: rgb(255, 60, 0); border-color: rgb(255, 180, 180) rgb(245, 130, 70) rgb(180, 20, 20) rgb(210, 40, 35)"
-							>
-								1y
-							</button>
-							<button class="set_timefr" id="tf_a" value="0">All</button>
-							<!-- do not put linebreaks in html between buttons to avoid space between elements -->
-						</div>
-					</div>
+				<div class="chart_flex" id="chart-flexbox"> <!-- RENDER HERE -->
+					
 				</div>
 				<div class="switch-channel-container">
 					<button id="button-prev" class="glowing_button" style="float: right;">

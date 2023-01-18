@@ -9,9 +9,6 @@
 //TD: EDGE-speciic: hover messages shifted (fr where the center starts, how wide is the ::after)
 //TD: create a hideen lin grad of {fr bot: darker green --> lighter ~} => depending on where a crt label is, map text color to lin grad where () => {fr top: color at element.top_border.pos.y AS ON hidden ref lin grad layer --> ~ elem.bot_bord ~}
 // TD: install Redux --> re-implement {ßuseState}
-// import React from 'react';
-// import ReactDOM from 'react-dom';
-// import InvestmentDropdown from './components';
 
 function $$(x) {
     return document.getElementById(x);
@@ -39,40 +36,40 @@ const labels_4_5 = Array.from(labels_full, (x) => x.substring(x.indexOf(" ") + 1
 var labels_current = labels_1_3;
 
 const timeseries_y = timeseries.slice(timeseries.length - 4380, timeseries.length);
-const context = $$("index_chart_canvas").getContext("2d");
+// const context = $$("index_chart_canvas").getContext("2d");
 
-var index_chart = new Chart(context, {
-    type: "line",
-    data: {
-        labels: labels_current, //omit labels for part of values, so th they can fit on screen -> about 7-10; how to make a label blank?; will this get updated along w values?
-        datasets: [
-            {
-                label: "Changes in index of [] channel", //mellette info ikon -> "The chart will show index fluctuations over a recent interval, the span of which can be selected on the top right"
-                data: timeseries_y, //TD: chg to arr.slice (1d) or other to be default
-                backgroundColor: ["rgba(0,0,0,0.95)"],
-                borderColor: ["rgba(255, 99, 132, 1)"],
-                color: ["rgba(127,255,0,1)"],
-            },
-        ],
-    },
-    options: {
-        maintainAspectRatio: false,
-        responsive: true,
-        pointRadius: 0.1,
-        borderWidth: 1.5,
-        backgroundColor: "rgba(0,0,0,0.95)",
-        scales: {
-            x: {
-                ticks: {
-                    maxTicksLimit: 8,
-                    autoSkip: true,
-                    maxRotation: 90,
-                    minRotation: 90,
-                },
-            },
-        },
-    },
-});
+// var index_chart = new Chart(context, {
+//     type: "line",
+//     data: {
+//         labels: labels_current, //omit labels for part of values, so th they can fit on screen -> about 7-10; how to make a label blank?; will this get updated along w values?
+//         datasets: [
+//             {
+//                 label: "Changes in index of [] channel", //mellette info ikon -> "The chart will show index fluctuations over a recent interval, the span of which can be selected on the top right"
+//                 data: timeseries_y, //TD: chg to arr.slice (1d) or other to be default
+//                 backgroundColor: ["rgba(0,0,0,0.95)"],
+//                 borderColor: ["rgba(255, 99, 132, 1)"],
+//                 color: ["rgba(127,255,0,1)"],
+//             },
+//         ],
+//     },
+//     options: {
+//         maintainAspectRatio: false,
+//         responsive: true,
+//         pointRadius: 0.1,
+//         borderWidth: 1.5,
+//         backgroundColor: "rgba(0,0,0,0.95)",
+//         scales: {
+//             x: {
+//                 ticks: {
+//                     maxTicksLimit: 8,
+//                     autoSkip: true,
+//                     maxRotation: 90,
+//                     minRotation: 90,
+//                 },
+//             },
+//         },
+//     },
+// });
 
 window.onload = function () {
     console.log("onload");
@@ -135,67 +132,67 @@ for (let args_ of buttons_click_change_color_args) {
     }    
 }
 
-var timefr_btn_states = [0, 0, 0, 0];
+// var timefr_btn_states = [0, 0, 0, 0];
 
-function f_update_chart_closure(button) {
-    return () => {
-        if (getComputedStyle(button).color == "rgb(127, 255, 0)") {
-            //check if color is rgb[chartr]
-            if (button.value == "0") {
-                index_chart.data.datasets[0].data = timeseries;
-                labels_current = labels_1_3;
-                index_chart.data.labels = labels_current;
-                //change color to reflect chosen status + change color of all other buttons in the group to deft
-            } else {
-                labels_current = button.value == "24" || button.value == "168" 
-                    ? labels_4_5 
-                    : button.value == "720" 
-                        ? labels_3_5 
-                        : labels_1_3;
+// function f_update_chart_closure(button) {
+//     return () => {
+//         if (getComputedStyle(button).color == "rgb(127, 255, 0)") {
+//             //check if color is rgb[chartr]
+//             if (button.value == "0") {
+//                 index_chart.data.datasets[0].data = timeseries;
+//                 labels_current = labels_1_3;
+//                 index_chart.data.labels = labels_current;
+//                 //change color to reflect chosen status + change color of all other buttons in the group to deft
+//             } else {
+//                 labels_current = button.value == "24" || button.value == "168" 
+//                     ? labels_4_5 
+//                     : button.value == "720" 
+//                         ? labels_3_5 
+//                         : labels_1_3;
                 
-                switch (button.value) {
-                    case "24":
-                        labels_current = labels_4_5;
-                        break;
-                    case "168":
-                        labels_current = labels_3_5;
-                        break;
-                    case "720":
-                        labels_current = labels_2_3;
-                        break;
-                    default:
-                        labels_current = labels_1_3;
-                }
+//                 switch (button.value) {
+//                     case "24":
+//                         labels_current = labels_4_5;
+//                         break;
+//                     case "168":
+//                         labels_current = labels_3_5;
+//                         break;
+//                     case "720":
+//                         labels_current = labels_2_3;
+//                         break;
+//                     default:
+//                         labels_current = labels_1_3;
+//                 }
 
-                index_chart.data.datasets[0].data = timeseries.slice(
-                    timeseries.length - Number(button.value) / index_update_frequency, 
-                    timeseries.length
-                ); //TD: w real time -> for last 24 hours, get last 24/freq points
-                index_chart.data.labels = labels_current.slice(
-                    labels_current.length - Number(button.value) / index_update_frequency, 
-                    timeseries.length
-                );
-            }
+//                 index_chart.data.datasets[0].data = timeseries.slice(
+//                     timeseries.length - Number(button.value) / index_update_frequency, 
+//                     timeseries.length
+//                 ); //TD: w real time -> for last 24 hours, get last 24/freq points
+//                 index_chart.data.labels = labels_current.slice(
+//                     labels_current.length - Number(button.value) / index_update_frequency, 
+//                     timeseries.length
+//                 );
+//             }
 
-            button.style.color = "rgb(255, 60, 0)";
-            button.style.borderColor = "rgb(255, 180, 180) rgb(245, 130, 70) rgb(180, 20, 20) rgb(210, 40, 35)";
-            //TD: do the labels chg respective to the x values shrinking? -> labels do not chg & x-values do not blow up to fill chart
+//             button.style.color = "rgb(255, 60, 0)";
+//             button.style.borderColor = "rgb(255, 180, 180) rgb(245, 130, 70) rgb(180, 20, 20) rgb(210, 40, 35)";
+//             //TD: do the labels chg respective to the x values shrinking? -> labels do not chg & x-values do not blow up to fill chart
             
-            for (let tf_btn of [...document.getElementsByClassName("set_timefr")]) {
-                if (tf_btn.value == button.value) {
-                    continue;
-                } else {
-                    tf_btn.style.color = "rgb(127, 255, 0)"; //chg to deft color (substitute w finally selected deft)
-                    tf_btn.style.borderColor = "rgb(200, 255, 180) rgb(127, 255, 0) rgb(80, 160, 40) rgb(10, 110, 10)";
-                }
-            }
-            index_chart.update();
-        }
-    };
-}
+//             for (let tf_btn of [...document.getElementsByClassName("set_timefr")]) {
+//                 if (tf_btn.value == button.value) {
+//                     continue;
+//                 } else {
+//                     tf_btn.style.color = "rgb(127, 255, 0)"; //chg to deft color (substitute w finally selected deft)
+//                     tf_btn.style.borderColor = "rgb(200, 255, 180) rgb(127, 255, 0) rgb(80, 160, 40) rgb(10, 110, 10)";
+//                 }
+//             }
+//             index_chart.update();
+//         }
+//     };
+// }
 
-for (let tf_btn2 of [...document.getElementsByClassName("set_timefr")]) {
-    const f_update_chart = f_update_chart_closure(tf_btn2);
-    tf_btn2.addEventListener("click", f_update_chart);
-}
+// for (let tf_btn2 of [...document.getElementsByClassName("set_timefr")]) {
+//     const f_update_chart = f_update_chart_closure(tf_btn2);
+//     tf_btn2.addEventListener("click", f_update_chart);
+// }
 //>>: on other loc website disp => get other 2 icon # code => ˇ {@keyframes} chg <content> to @#code
