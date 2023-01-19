@@ -121,6 +121,7 @@ export const chart_button_selected_style = {
 }
 
 export const index_update_frequency = 2; // I: every x hours (<1 if more over 1 hour), in future get this value dynamically, based on the current freq
+
 const first_date = Date.now() - 3.1536 * 10 ** 10; //later subst w first recorded date
 const labels_full = Array.from(
     {length: 4380}, 

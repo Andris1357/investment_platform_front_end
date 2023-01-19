@@ -37,17 +37,15 @@ function getSelectedChannelIndex() {
     return Number(current_channel_id[current_channel_id.indexOf("-container") - 1])
 }
 
-function wrapChartElement() {
-    const context = document.getElementById("index_chart_canvas").getContext("2d");
-
-    return new Chart(context, {
+function wrapChartElement(context_, data_, labels_) {
+    return new Chart(context_, {
         type: "line",
         data: {
-            labels: Data.labels_current, //omit labels for part of values, so th they can fit on screen -> about 7-10; how to make a label blank?; will this get updated along w values?
+            labels: labels_, //omit labels for part of values, so th they can fit on screen -> about 7-10; how to make a label blank?; will this get updated along w values?
             datasets: [
                 {
                     label: "Changes in index of [] channel", //mellette info ikon -> "The chart will show index fluctuations over a recent interval, the span of which can be selected on the top right"
-                    data: Data.channels[getSelectedChannelIndex()].score_timeseries, //TD: chg to arr.slice (1d) or other to be default
+                    data: data_, //TD: chg to arr.slice (1d) or other to be default
                     backgroundColor: ["rgba(0,0,0,0.95)"],
                     borderColor: ["rgba(255, 99, 132, 1)"],
                     color: ["rgba(127,255,0,1)"],
@@ -76,57 +74,48 @@ const ChartComponent = () => {
     const [index_chart, changeChart] = React.useState();
     const [selected_timeframe, selectTimeframe] = React.useState("8760");
     const [current_labels, setLabels] = React.useState(Data.labels_current)
-    const [chart, setChart] = React.useState();
-    const [selected_timeseries, setTimeseries] = React.useState();
+    const [current_timeseries, setTimeseries] = React.useState();
 
     const chart_ref = React.useRef();
 
+    // React.useLayoutEffect(() => {
+    //     if (chart_ref.current) {
+    //         let chart = wrapChartElement(
+    //             document.getElementById("index_chart_canvas").getContext("2d"),
+    //             Data.channels[getSelectedChannelIndex()].score_timeseries,
+    //             Data.labels_current
+    //         )
+    //         changeChart(chart);
+    //         chart_ref.current = chart;
+    //         console.log(`CHART ELEMENT AFTER INIT: ${chart.data.datasets[0].data.slice(0,15)}`)
+    //     }
+    // }, []);
+
     React.useEffect(() => {
-        if (index_chart) {
-            console.log(`${selected_timeframe}`)
-            console.log(`${index_chart.data.labels}`)
-            index_chart.data.labels = Data.labels_3_5
-            index_chart.update()
+        if (chart_ref.current) {
+            const updated_chart = wrapChartElement(
+                chart_ref.current.getContext("2d"),
+                current_timeseries,
+                current_labels
+            );
+            changeChart(updated_chart);
         }
     }, [selected_timeframe])
 
     const updateChart = React.useCallback((event_) => { // TD: rewrite value & color checks to hooks
         selectTimeframe(event_.target.value);
         let timeseries = Data.channels[getSelectedChannelIndex()].score_timeseries;
-        console.log(`timeseries index: ${getSelectedChannelIndex()}\ndata:\n${timeseries.slice(0, 30)}`)
+        // console.log(`timeseries index: ${getSelectedChannelIndex()}\ndata:\n${timeseries.slice(0, 30)}`)
     
-        console.log(`computed style: ${getComputedStyle(event_.target).color}`)
-        if (getComputedStyle(event_.target).color == "rgb(127, 255, 0)") {
-            console.log(`button value: ${event_.target.value}`)
-            //check if color is rgb[chartr]
+        if (getComputedStyle(event_.target).color == "rgb(127, 255, 0)") { // check if color is chartreuse
+            
             if (event_.target.value == "0") {
                 console.log(`chart element: ${index_chart}`)
-                changeChart({
-                    ...index_chart, 
-                    data: {
-                        ...index_chart.data, 
-                        datasets: {
-                            labels: Data.labels_1_3,
-                            datasets: [{
-                                ...index_chart.data.datasets[0], 
-                                data: timeseries
-                            }]
-                        }
-                    }
-                })
-                console.log(`chart element: ${index_chart}`)
-                index_chart.data.datasets[0].data = timeseries; // TD: THIS WILL NEVER WORK WITH ßUSESTATE VAR -> NEW HOOK HERE!
+                setTimeseries(timeseries); // TD: THIS WILL NEVER WORK WITH ßUSESTATE VAR -> NEW HOOK HERE!
+                // chart_ref.current.data.datasets[0] = current_timeseries;
                 setLabels(Data.labels_1_3);
-                index_chart.data.labels = [...current_labels];
-                //change color to reflect chosen status + change color of all other buttons in the group to deft
-            } else {
-                setLabels(
-                    event_.target.value == "24" || event_.target.value == "168" 
-                        ? Data.labels_4_5 
-                        : event_.target.value == "720" 
-                            ? Data.labels_3_5 
-                            : Data.labels_1_3
-                );
+                // chart_ref.current.data.labels = current_labels;
+            } else { // change color to reflect chosen status + change color of all other buttons in the group to deft
                 
                 switch (event_.target.value) {
                     case "24":
@@ -141,16 +130,18 @@ const ChartComponent = () => {
                     default:
                         setLabels(Data.labels_1_3);
                 }
-                console.log(index_chart)
 
-                index_chart.data.datasets[0].data = timeseries.slice(
+                setTimeseries(timeseries.slice(
                     timeseries.length - Number(event_.target.value) / Data.index_update_frequency, 
                     timeseries.length
-                ); //TD: w real time -> for last 24 hours, get last 24/freq points
-                index_chart.data.labels = [...current_labels].slice(
-                    [...current_labels].length - Number(event_.target.value) / Data.index_update_frequency, 
+                )); //TD: w real time -> for last 24 hours, get last 24/freq points
+                // chart_ref.current.data.datasets[0] = current_timeseries;
+                
+                setLabels(current_labels.slice(
+                    current_labels.length - Number(event_.target.value) / Data.index_update_frequency, 
                     timeseries.length
-                );
+                ));
+                // chart_ref.current.data.labels = current_labels;
             }
 
             event_.target.style.color = "rgb(255, 60, 0)";
@@ -165,22 +156,13 @@ const ChartComponent = () => {
                     timeframe_button_.style.borderColor = "rgb(200, 255, 180) rgb(127, 255, 0) rgb(80, 160, 40) rgb(10, 110, 10)";
                 }
             }
-            index_chart.update();
+            chart_ref.current.update();
         }
-    }, []);
-
-    const selectButton = React.useCallback((event_) => {
-        console.log(`button: ${event_.target}`)
-    }, [])
-    
-    React.useEffect(() => {
-        changeChart(wrapChartElement());
-        console.log(`CHART ELEMENT AFTER INIT: ${index_chart}`)
     }, []);
     
     return (
         <div class="chart_wrap">
-            <canvas class="chart" id="index_chart_canvas"></canvas>
+            <canvas class="chart" id="index_chart_canvas" ref={chart_ref}></canvas>
             <div class="chart_navbar">
                 <button class="set_timefr" id="tf_d" value="24" onClick={updateChart}>1d</button>
                 <button class="set_timefr" id="tf_w" value="168" onClick={updateChart}>1w</button>
