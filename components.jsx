@@ -105,17 +105,19 @@ function calculateChartData(timeframe_value_) {
     ]
 }
 
-const ChartComponent = ({timeframe_}) => {
-    const [current_timeseries, current_labels] = calculateChartData(timeframe_);
+const ChartComponent = ({timeseries_, labels_}) => {
     const chart_ref = React.useRef();
     
     React.useEffect(() => {
         if (chart_ref.current) {
-            wrapChartElement(
-                chart_ref.current.getContext("2d"),
-                current_timeseries,
-                current_labels
-            ); // USE ßTRY & EMPTY ßCATCH IF DOESNT WORK
+            try {
+                wrapChartElement(
+                    chart_ref.current.getContext("2d"),
+                    timeseries_,
+                    labels_
+                ); // USE ßTRY & EMPTY ßCATCH IF DOESNT WORK
+            }
+            catch (error) {console.log("tried to re-render")}
             console.log("rendered chart")
         }
     }, [chart_ref])
@@ -131,9 +133,6 @@ const ChartComponent = ({timeframe_}) => {
     //             Data.channels[getSelectedChannelIndex()].score_timeseries,
     //             Data.labels_current
     //         )
-    //         changeChart(chart);
-    //         chart_ref.current = chart;
-    //         console.log(`CHART ELEMENT AFTER INIT: ${chart.data.datasets[0].data.slice(0,15)}`)
     //     }
     // }, []);
 const ChartArea = () => {
@@ -141,9 +140,16 @@ const ChartArea = () => {
     const [current_labels, setLabels] = React.useState(Data.labels_current)
     const [current_timeseries, setTimeseries] = React.useState();
 
+    React.useEffect(() => {
+        const [calculated_timeseries, calculated_labels] = calculateChartData(selected_timeframe);
+        setTimeseries(calculated_timeseries);
+        setLabels(calculated_labels);
+        console.log(`timeseries index: ${getSelectedChannelIndex()}\ntimeframe:\n${selected_timeframe}\ndata:${current_timeseries}\nlabels:${current_labels}`)
+    }, [selected_timeframe])
+
     const updateChart = React.useCallback((event_) => { // TD: rewrite value & color checks to hooks
-        selectTimeframe(event_.target.value); console.log(event_.target.value)
-    
+        selectTimeframe(event_.target.value);
+        
         if (getComputedStyle(event_.target).color == "rgb(127, 255, 0)") { // check if color is chartreuse
             
             event_.target.style.color = "rgb(255, 60, 0)";
@@ -159,14 +165,10 @@ const ChartArea = () => {
             }
         }
     }, []);
-
-    React.useEffect(() => {
-        console.log(`timeseries index: ${getSelectedChannelIndex()}\timeframe:\n${selected_timeframe}`)
-    }, [selected_timeframe])
     // PASS VALUE IN ONCLICK
     return (
         <div class="chart_wrap">
-            <ChartComponent timeframe_={selected_timeframe}/>
+            <ChartComponent timeseries_={current_timeseries} labels_={current_labels}/>
             <div class="chart_navbar">
                 <button class="set_timefr" id="tf_d" value="24" onClick={updateChart}>1d</button>
                 <button class="set_timefr" id="tf_w" value="168" onClick={updateChart}>1w</button>
