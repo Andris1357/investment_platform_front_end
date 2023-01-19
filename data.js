@@ -52,7 +52,6 @@ function generateRandomTimeseries() {
     for (let i = 1; i < 4380; i++) {
         timeseries.push(timeseries[i - 1] + Math.random() * 10 - 5);
     }
-    console.log(`timeseries: ${timeseries.slice(timeseries.length - 4380, timeseries.length - 4350)}`)
     return timeseries.slice(timeseries.length - 4380, timeseries.length);
 }
 

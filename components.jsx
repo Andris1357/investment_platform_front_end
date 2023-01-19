@@ -59,12 +59,14 @@ function wrapChartElement(context_, data_, labels_) {
             borderWidth: 1.5,
             backgroundColor: "rgba(0,0,0,0.95)",
             scales: {
-                x: {ticks: {
-                    maxTicksLimit: 8,
-                    autoSkip: true,
-                    maxRotation: 90,
-                    minRotation: 90,
-                }},
+                x: {
+                    ticks: {
+                        maxTicksLimit: 8,
+                        autoSkip: true,
+                        maxRotation: 90,
+                        minRotation: 90,
+                    }
+                },
             },
         },
     });
@@ -105,22 +107,20 @@ function calculateChartData(timeframe_value_) {
     ]
 }
 
-const ChartComponent = ({timeseries_, labels_}) => {
+const ChartComponent = ({timeframe_}) => {
     const chart_ref = React.useRef();
-    
+    const [calculated_timeseries, calculated_labels] = calculateChartData(timeframe_);
+    console.log(`in chartcomp\ndata:${calculated_timeseries}\nlabels:${calculated_labels}`)
     React.useEffect(() => {
         if (chart_ref.current) {
-            try {
-                wrapChartElement(
-                    chart_ref.current.getContext("2d"),
-                    timeseries_,
-                    labels_
-                ); // USE ßTRY & EMPTY ßCATCH IF DOESNT WORK
-            }
-            catch (error) {console.log("tried to re-render")}
+            wrapChartElement(
+                chart_ref.current.getContext("2d"),
+                calculated_timeseries,
+                calculated_labels
+            ); // USE ßTRY & EMPTY ßCATCH IF DOESNT WORK
             console.log("rendered chart")
         }
-    }, [chart_ref])
+    }, [chart_ref, timeframe_])
 
     return (
         <canvas class="chart" id="index_chart_canvas" ref={chart_ref}></canvas>
@@ -143,7 +143,7 @@ const ChartArea = () => {
     React.useEffect(() => {
         const [calculated_timeseries, calculated_labels] = calculateChartData(selected_timeframe);
         setTimeseries(calculated_timeseries);
-        setLabels(calculated_labels);
+        setLabels(calculated_labels); // !: THESE GET SET CORRECTLY
         console.log(`timeseries index: ${getSelectedChannelIndex()}\ntimeframe:\n${selected_timeframe}\ndata:${current_timeseries}\nlabels:${current_labels}`)
     }, [selected_timeframe])
 
@@ -168,7 +168,7 @@ const ChartArea = () => {
     // PASS VALUE IN ONCLICK
     return (
         <div class="chart_wrap">
-            <ChartComponent timeseries_={current_timeseries} labels_={current_labels}/>
+            <ChartComponent timeframe_={selected_timeframe} /*timeseries_={current_timeseries} labels_={current_labels}*//>
             <div class="chart_navbar">
                 <button class="set_timefr" id="tf_d" value="24" onClick={updateChart}>1d</button>
                 <button class="set_timefr" id="tf_w" value="168" onClick={updateChart}>1w</button>
