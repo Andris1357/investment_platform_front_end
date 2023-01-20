@@ -1,7 +1,6 @@
 import * as Data from "./data.js"
 // import ChartComponent from "./ChartComponent.jsx";
 
-
 class RenderedComponent {
     constructor (component_, anchor_element_id_) {
         this.component = component_;
@@ -74,12 +73,10 @@ function wrapChartElement(context_, data_, labels_) {
 
 function calculateChartData(timeframe_value_) {
     let labels;
-    const timeseries = Data.channels[getSelectedChannelIndex()].score_timeseries;
+    let timeseries = Data.channels[getSelectedChannelIndex()].score_timeseries;
 
-    if (timeframe_value_ == "0") {
-        labels = Data.labels_1_3; // ?: this may be too many labels
-    } else { // change color to reflect chosen status + change color of all other buttons in the group to deft
-        
+    if (timeframe_value_ !== "0") {
+    // change color to reflect chosen status + change color of all other buttons in the group to deft
         switch (timeframe_value_) {
             case "24":
                 labels = Data.labels_4_5;
@@ -93,40 +90,46 @@ function calculateChartData(timeframe_value_) {
             default:
                 labels = Data.labels_1_3;
         }//TD: w real time -> for last 24 hours, get last 24/freq points
+    
+        console.log(`timeframe: ${timeframe_value_} timeseries: ${timeseries}`)
+        return [
+            timeseries.slice(
+                timeseries.length - Number(timeframe_value_) / Data.index_update_frequency, 
+                timeseries.length
+            ),
+            labels.slice(
+                labels.length - Number(timeframe_value_) / Data.index_update_frequency, 
+                timeseries.length
+            )
+        ]
     }
 
-    return [
-        timeseries.slice(
-            timeseries.length - Number(timeframe_value_) / Data.index_update_frequency, 
-            timeseries.length
-        ),
-        labels.slice(
-            labels.length - Number(timeframe_value_) / Data.index_update_frequency, 
-            timeseries.length
-        )
-    ]
+    labels = Data.labels_1_3;
+    timeseries = timeseries.slice(timeseries.length - 4380, timeseries.length);
+    return [timeseries, labels]
 }
 
+let chart_global;
 const ChartComponent = ({timeframe_}) => {
     const chart_ref = React.useRef();
     let [calculated_timeseries, calculated_labels] = calculateChartData(timeframe_);
-    console.log(`in chartcomp\ndata:${calculated_timeseries}\nlabels:${calculated_labels}`)
+    console.log(`in chartcomp\ndata:${calculated_timeseries.slice(0,15)}\nlabels:${calculated_labels.slice(0,10)}`)
+    
     React.useEffect(() => {
-        if (chart_ref.current) {
-        //     chart_ref.current.data.datasets[0].data = calculated_timeseries;
-        //     chart_ref.current.data.labels = calculated_labels;
-        //     chart_ref.current.update();
-        //     console.log("re-rendered chart")
-        // } else { 
+        if (chart_ref.current && !chart_global) {
             const context = chart_ref.current.getContext("2d");
-            chart_ref.current = null;
-            // context.clearRect(0, 0, chart_ref.current.width, chart_ref.current.height);
-            chart_ref.current = wrapChartElement(
+            chart_global = wrapChartElement(
                 context, //chart_ref.current.getContext("2d"),
                 calculated_timeseries,
                 calculated_labels
             );
-            console.log("rendered chart initially")
+            console.log("rendered chart on start")
+        } 
+        else if (chart_ref.current && chart_global) {
+            chart_global.data.datasets[0].data = calculated_timeseries;
+            chart_global.data.labels = calculated_labels;
+            chart_global.update();
+            console.log("re-rendered chart")
         }
     }, [chart_ref, timeframe_, calculated_timeseries, calculated_labels])
 
@@ -134,15 +137,7 @@ const ChartComponent = ({timeframe_}) => {
         <canvas class="chart" id="index_chart_canvas" ref={chart_ref}></canvas>
     )
 }
-// React.useLayoutEffect(() => {
-    //     if (chart_ref.current) {
-    //         let chart = wrapChartElement(
-    //             document.getElementById("index_chart_canvas").getContext("2d"),
-    //             Data.channels[getSelectedChannelIndex()].score_timeseries,
-    //             Data.labels_current
-    //         )
-    //     }
-    // }, []);
+
 const ChartArea = () => {
     const [selected_timeframe, selectTimeframe] = React.useState("8760");
     const [current_labels, setLabels] = React.useState(Data.labels_current)
@@ -152,14 +147,13 @@ const ChartArea = () => {
         const [calculated_timeseries, calculated_labels] = calculateChartData(selected_timeframe);
         setTimeseries(calculated_timeseries);
         setLabels(calculated_labels); // !: THESE GET SET CORRECTLY
-        console.log(`timeseries index: ${getSelectedChannelIndex()}\ntimeframe:\n${selected_timeframe}\ndata:${current_timeseries}\nlabels:${current_labels}`)
+        console.log(`timeseries index: ${getSelectedChannelIndex()}\ntimeframe:\n${selected_timeframe}\ndata:${[...(current_timeseries ?? [0])].slice(0,15)}\nlabels:${[...(current_labels ?? [0])].slice(0,10)}`)
     }, [selected_timeframe])
 
     const updateChart = React.useCallback((event_) => { // TD: rewrite value & color checks to hooks
         selectTimeframe(event_.target.value);
         
         if (getComputedStyle(event_.target).color == "rgb(127, 255, 0)") { // check if color is chartreuse
-            
             event_.target.style.color = "rgb(255, 60, 0)";
             event_.target.style.borderColor = "rgb(255, 180, 180) rgb(245, 130, 70) rgb(180, 20, 20) rgb(210, 40, 35)"; //TD: do the labels chg respective to the x values shrinking? -> labels do not chg & x-values do not blow up to fill chart
             
@@ -194,7 +188,7 @@ const ChartArea = () => {
             </div>
         </div>
     )
-}
+} // TD: make "all" timefr longer & figure out how to select labels
 
 const Table = ({rows_content}) => { // P: @rows_content :: str|num[][]
     if (!Array.isArray(rows_content)) {
