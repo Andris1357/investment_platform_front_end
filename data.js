@@ -47,12 +47,17 @@ class Channel {
     }
 }
 
+export const index_update_frequency = 2; // I: every x hours (<1 if more over 1 hour), in future get this value dynamically, based on the current freq
+const timeseries_max_length = 9760;
+export const last_updated = "2021.09.30"; // LT: query fr DB
+export const current_timeframe = "1 year"; // TD: ßuseState => have this change b.o. what btn was clicked last
+
 function generateRandomTimeseries() {
     let timeseries = [Math.random() * 5]; // LT: only load deft timeseries, make req to db if user wants to view longer timefr
-    for (let i = 1; i < 4380; i++) {
+    for (let i = 1; i < timeseries_max_length; i++) {
         timeseries.push(timeseries[i - 1] + Math.random() * 10 - 5);
     }
-    return timeseries.slice(timeseries.length - 4380, timeseries.length);
+    return timeseries;
 }
 
 export const investments = [ // LT: sh come from DB
@@ -95,9 +100,6 @@ export const channels = [
     ),
 ];
 
-export const last_updated = "2021.09.30"; // LT: query fr DB
-export const current_timeframe = "1 year"; // TD: ßuseState => have this change b.o. what btn was clicked last
-
 export const metric_category_style = { // !: <span>.padding does not transfer to parent::<td>.padding
     minHeight: "50px", // /\: padding does not work -> try sth else | remove sub-titles
     maxHeight: "50px",
@@ -119,14 +121,20 @@ export const chart_button_selected_style = {
     borderColor: "rgb(255, 180, 180) rgb(245, 130, 70) rgb(180, 20, 20) rgb(210, 40, 35)"
 }
 
-export const index_update_frequency = 2; // I: every x hours (<1 if more over 1 hour), in future get this value dynamically, based on the current freq
-
 const first_date = Date.now() - 3.1536 * 10 ** 10; //later subst w first recorded date
 const labels_full = Array.from(
-    {length: 4380}, 
+    {length: timeseries_max_length}, 
     (_, index) => {
         let date_i = new Date(first_date + index * index_update_frequency * 3.6 * 10 ** 6);
-        return "" + date_i.getFullYear() + "-" + (date_i.getMonth() + 1) + "-" + date_i.getDate() + ". " + date_i.getHours() + ":00"; // LT: later switch to datetime of db row
+        return "" 
+            + date_i.getFullYear() 
+            + "-" 
+            + (date_i.getMonth() + 1) 
+            + "-" 
+            + date_i.getDate() 
+            + ". " 
+            + date_i.getHours() 
+            + ":00" // LT: later switch to datetime of db row
     }
 ); // I: only shows 7-10 labels in total -> label is null if index %% arr.slice.length/10 != 0
 export const labels_1_3 = Array.from(
@@ -146,4 +154,3 @@ export const labels_4_5 = Array.from(
     x => x.substring(x.indexOf(" ") + 1, x.length)
 );
 export const labels_current = labels_1_3;
-

@@ -104,8 +104,11 @@ function calculateChartData(timeframe_value_) {
         ]
     }
 
+    if (Number(timeframe_value_) >= 720) {
+        timeseries = timeseries.filter((_, index) => index % 7 === 6)
+    }
+
     labels = Data.labels_1_3;
-    timeseries = timeseries.slice(timeseries.length - 4380, timeseries.length);
     return [timeseries, labels]
 }
 
