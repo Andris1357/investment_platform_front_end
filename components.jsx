@@ -109,18 +109,26 @@ function calculateChartData(timeframe_value_) {
 
 const ChartComponent = ({timeframe_}) => {
     const chart_ref = React.useRef();
-    const [calculated_timeseries, calculated_labels] = calculateChartData(timeframe_);
+    let [calculated_timeseries, calculated_labels] = calculateChartData(timeframe_);
     console.log(`in chartcomp\ndata:${calculated_timeseries}\nlabels:${calculated_labels}`)
     React.useEffect(() => {
         if (chart_ref.current) {
-            wrapChartElement(
-                chart_ref.current.getContext("2d"),
+        //     chart_ref.current.data.datasets[0].data = calculated_timeseries;
+        //     chart_ref.current.data.labels = calculated_labels;
+        //     chart_ref.current.update();
+        //     console.log("re-rendered chart")
+        // } else { 
+            const context = chart_ref.current.getContext("2d");
+            chart_ref.current = null;
+            // context.clearRect(0, 0, chart_ref.current.width, chart_ref.current.height);
+            chart_ref.current = wrapChartElement(
+                context, //chart_ref.current.getContext("2d"),
                 calculated_timeseries,
                 calculated_labels
-            ); // USE ßTRY & EMPTY ßCATCH IF DOESNT WORK
-            console.log("rendered chart")
+            );
+            console.log("rendered chart initially")
         }
-    }, [chart_ref, timeframe_])
+    }, [chart_ref, timeframe_, calculated_timeseries, calculated_labels])
 
     return (
         <canvas class="chart" id="index_chart_canvas" ref={chart_ref}></canvas>
