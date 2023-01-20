@@ -60,7 +60,7 @@ function wrapChartElement(context_, data_, labels_) {
             scales: {
                 x: {
                     ticks: {
-                        maxTicksLimit: 8,
+                        maxTicksLimit: 8, // I: sets max number of labels
                         autoSkip: true,
                         maxRotation: 90,
                         minRotation: 90,
@@ -71,12 +71,11 @@ function wrapChartElement(context_, data_, labels_) {
     });
 }
 
-function calculateChartData(timeframe_value_) {
+function calculateChartData(timeframe_value_, channel_index_) {
     let labels;
-    let timeseries = Data.channels[getSelectedChannelIndex()].score_timeseries;
+    let timeseries = Data.channels[channel_index_].score_timeseries;
 
-    if (timeframe_value_ !== "0") {
-    // change color to reflect chosen status + change color of all other buttons in the group to deft
+    if (timeframe_value_ !== "0") { // I: changes color to reflect chosen status & changes color of all other buttons in the group to default
         switch (timeframe_value_) {
             case "24":
                 labels = Data.labels_4_5;
@@ -88,8 +87,8 @@ function calculateChartData(timeframe_value_) {
                 labels = Data.labels_2_3;
                 break;
             default:
-                labels = Data.labels_1_3;
-        }//TD: w real time -> for last 24 hours, get last 24/freq points
+                labels = Data.labels_1_3; // I: meaning an array of dates where the first 3 largest increments of time are specified, e.g. 2022.01.21.
+        } // TD: w real time -> for last 24 hours, get last 24/freq points
     
         console.log(`timeframe: ${timeframe_value_} timeseries: ${timeseries}`)
         return [
@@ -104,25 +103,25 @@ function calculateChartData(timeframe_value_) {
         ]
     }
 
-    if (Number(timeframe_value_) >= 720) {
-        timeseries = timeseries.filter((_, index) => index % 7 === 6)
+    if (Number(timeframe_value_) > 720) {
+        timeseries = timeseries.filter((_, index) => index % 11 === 10)
     }
 
     labels = Data.labels_1_3;
     return [timeseries, labels]
 }
-
-let chart_global;
-const ChartComponent = ({timeframe_}) => {
+// TD: connect channel switch to re-rendering chart
+var chart_global;
+const ChartComponent = ({timeframe_, channel_index_}) => {
     const chart_ref = React.useRef();
-    let [calculated_timeseries, calculated_labels] = calculateChartData(timeframe_);
+    let [calculated_timeseries, calculated_labels] = calculateChartData(timeframe_, channel_index_);
     console.log(`in chartcomp\ndata:${calculated_timeseries.slice(0,15)}\nlabels:${calculated_labels.slice(0,10)}`)
     
     React.useEffect(() => {
         if (chart_ref.current && !chart_global) {
             const context = chart_ref.current.getContext("2d");
             chart_global = wrapChartElement(
-                context, //chart_ref.current.getContext("2d"),
+                context,
                 calculated_timeseries,
                 calculated_labels
             );
@@ -143,16 +142,15 @@ const ChartComponent = ({timeframe_}) => {
 
 const ChartArea = () => {
     const [selected_timeframe, selectTimeframe] = React.useState("8760");
-    const [current_labels, setLabels] = React.useState(Data.labels_current)
-    const [current_timeseries, setTimeseries] = React.useState();
+    const [selected_channel_index, selectChannel] = React.useState(0);
 
-    React.useEffect(() => {
-        const [calculated_timeseries, calculated_labels] = calculateChartData(selected_timeframe);
-        setTimeseries(calculated_timeseries);
-        setLabels(calculated_labels); // !: THESE GET SET CORRECTLY
-        console.log(`timeseries index: ${getSelectedChannelIndex()}\ntimeframe:\n${selected_timeframe}\ndata:${[...(current_timeseries ?? [0])].slice(0,15)}\nlabels:${[...(current_labels ?? [0])].slice(0,10)}`)
-    }, [selected_timeframe])
-
+    document.getElementById("button-next").addEventListener("click", () => {
+		selectChannel(current_index_ => current_index_ < Data.channels.length - 1 ? current_index_ + 1 : current_index_);
+	}) // TD: these btns sh be disabled if user cannot go anymore in that direction | turn font black
+    document.getElementById("button-prev").addEventListener("click", () => {
+        selectChannel(current_index_ => current_index_ >= 1 ? current_index_ - 1 : current_index_)
+    }) // TD: set max length of channels list instead of constants
+    
     const updateChart = React.useCallback((event_) => { // TD: rewrite value & color checks to hooks
         selectTimeframe(event_.target.value);
         
@@ -170,10 +168,10 @@ const ChartArea = () => {
             }
         }
     }, []);
-    // PASS VALUE IN ONCLICK
+    
     return (
         <div class="chart_wrap">
-            <ChartComponent timeframe_={selected_timeframe} /*timeseries_={current_timeseries} labels_={current_labels}*//>
+            <ChartComponent timeframe_={selected_timeframe} channel_index_={selected_channel_index}/>
             <div class="chart_navbar">
                 <button class="set_timefr" id="tf_d" value="24" onClick={updateChart}>1d</button>
                 <button class="set_timefr" id="tf_w" value="168" onClick={updateChart}>1w</button>
@@ -191,7 +189,7 @@ const ChartArea = () => {
             </div>
         </div>
     )
-} // TD: make "all" timefr longer & figure out how to select labels
+}
 
 const Table = ({rows_content}) => { // P: @rows_content :: str|num[][]
     if (!Array.isArray(rows_content)) {
@@ -251,7 +249,7 @@ const ChannelDetailsTable = () => {
     const [selected_channel_index, selectChannel] = React.useState(0);
     document.getElementById("button-next").addEventListener("click", () => {
 		selectChannel(current_index_ => current_index_ < Data.channels.length - 1 ? current_index_ + 1 : current_index_);
-	})
+	}) // TD: these btns sh be disabled if user cannot go anymore in that direction | turn font black
     document.getElementById("button-prev").addEventListener("click", () => {
         selectChannel(current_index_ => current_index_ >= 1 ? current_index_ - 1 : current_index_)
     })
@@ -303,7 +301,7 @@ const ChannelDetailsTable = () => {
         </div>
     )
 }
-
+// TD: refactor these into other file
 const InvestmentDropdown = ({onChange_, value_}) => {
     return ( // /\: truncate dropdown width
         <select onChange={onChange_} value={value_}>
