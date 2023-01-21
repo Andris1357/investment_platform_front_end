@@ -40,7 +40,7 @@
             Header
         </header> -->
 			<!-- put both side contents into a flex div, one by one it sh work -->
-			<aside class="sidebar">
+			<div class="sidebar" style="width: 100%;">
 				<!--not including two frames in a subdiv under root_ correctly placed chart div in the middle vertically but somehow not the other -> maybe try setting relative pos for that too?-->
 				<div class="stats_flex">
 					<div class="flex_row_inhibit">
@@ -146,7 +146,7 @@
 						</div>
 					</div>
 				</div>
-			</aside>
+			</div>
 			<!-- vertical align middle doesnt work, padding seems to deattach buttons from chart and their position for some reason cannot be relativized to chart (inner) div -->
 			<section class="main">
 				<div class="chart_flex" id="chart-flexbox"></div>

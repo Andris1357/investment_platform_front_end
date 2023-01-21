@@ -29,12 +29,7 @@ function hoverUseStateEL(element_id_, useStateCallable_) {
 
 function getIconIndex(element) {
     return element.tagName == this; //findIndex takes second opt arg as to be substituted for used func's ßthis ref
-}
-
-function getSelectedChannelIndex() {
-    let current_channel_id = [...document.getElementsByClassName("channel-container")][0].id;
-    return Number(current_channel_id[current_channel_id.indexOf("-container") - 1])
-}
+} // TD: fix amounts watermark placement in vertical view
 
 function wrapChartElement(context_, data_, labels_) {
     return new Chart(context_, {
