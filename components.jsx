@@ -1,5 +1,5 @@
 import * as Data from "./data.js"
-// import ChartComponent from "./ChartComponent.jsx";
+// import {InvestmentDropdown, DisabledTextbox, InfoHoverIcon, CategoryWithInfo} from "./basic_components.jsx"
 
 class RenderedComponent {
     constructor (component_, anchor_element_id_) {
@@ -110,12 +110,11 @@ function calculateChartData(timeframe_value_, channel_index_) {
     labels = Data.labels_1_3;
     return [timeseries, labels]
 }
-// TD: connect channel switch to re-rendering chart
+
 var chart_global;
 const ChartComponent = ({timeframe_, channel_index_}) => {
     const chart_ref = React.useRef();
     let [calculated_timeseries, calculated_labels] = calculateChartData(timeframe_, channel_index_);
-    console.log(`in chartcomp\ndata:${calculated_timeseries.slice(0,15)}\nlabels:${calculated_labels.slice(0,10)}`)
     
     React.useEffect(() => {
         if (chart_ref.current && !chart_global) {
@@ -125,13 +124,11 @@ const ChartComponent = ({timeframe_, channel_index_}) => {
                 calculated_timeseries,
                 calculated_labels
             );
-            console.log("rendered chart on start")
         } 
         else if (chart_ref.current && chart_global) {
             chart_global.data.datasets[0].data = calculated_timeseries;
             chart_global.data.labels = calculated_labels;
             chart_global.update();
-            console.log("re-rendered chart")
         }
     }, [chart_ref, timeframe_, calculated_timeseries, calculated_labels])
 
@@ -146,15 +143,15 @@ const ChartArea = () => {
 
     document.getElementById("button-next").addEventListener("click", () => {
 		selectChannel(current_index_ => current_index_ < Data.channels.length - 1 ? current_index_ + 1 : current_index_);
-	}) // TD: these btns sh be disabled if user cannot go anymore in that direction | turn font black
+	})
     document.getElementById("button-prev").addEventListener("click", () => {
         selectChannel(current_index_ => current_index_ >= 1 ? current_index_ - 1 : current_index_)
-    }) // TD: set max length of channels list instead of constants
+    })
     
-    const updateChart = React.useCallback((event_) => { // TD: rewrite value & color checks to hooks
+    const updateChart = React.useCallback((event_) => { // /\: rewrite value & color checks to hooks
         selectTimeframe(event_.target.value);
         
-        if (getComputedStyle(event_.target).color == "rgb(127, 255, 0)") { // check if color is chartreuse
+        if (getComputedStyle(event_.target).color == "rgb(127, 255, 0)") { // I: checks if color is chartreuse
             event_.target.style.color = "rgb(255, 60, 0)";
             event_.target.style.borderColor = "rgb(255, 180, 180) rgb(245, 130, 70) rgb(180, 20, 20) rgb(210, 40, 35)"; //TD: do the labels chg respective to the x values shrinking? -> labels do not chg & x-values do not blow up to fill chart
             
@@ -245,15 +242,41 @@ const InvestmentDetailsTable = () => {
     )
 }
 
+// TD: page for {user settings & withdraw, buy & sell tokens, channel > withdraw & redeem}; popup for {user login, search among channels}
+// TD: menu ribbon > {{user hash, amount of tokens}, icons{other pages}}
 const ChannelDetailsTable = () => {
     const [selected_channel_index, selectChannel] = React.useState(0);
+
     document.getElementById("button-next").addEventListener("click", () => {
-		selectChannel(current_index_ => current_index_ < Data.channels.length - 1 ? current_index_ + 1 : current_index_);
+        selectChannel(current_index_ => {
+            return current_index_ < Data.channels.length - 1 ? current_index_ + 1 : current_index_
+        });
 	}) // TD: these btns sh be disabled if user cannot go anymore in that direction | turn font black
     document.getElementById("button-prev").addEventListener("click", () => {
         selectChannel(current_index_ => current_index_ >= 1 ? current_index_ - 1 : current_index_)
     })
     let channel = Data.channels[selected_channel_index];
+
+    React.useEffect(() => {
+        const button_prev = document.getElementById("button-prev");
+        const button_next = document.getElementById("button-next");
+        
+        if (selected_channel_index == 0) {
+            button_prev.disabled = true;
+            button_prev.style.color = "black";
+        } else {
+            button_prev.disabled = false;
+            button_prev.style.color = "chartreuse";
+        }
+
+        if (selected_channel_index == Data.channels.length - 1) {
+            button_next.disabled = true;
+            button_next.style.color = "black";
+        } else {
+            button_next.disabled = false;
+            button_next.style.color = "chartreuse";
+        }
+    }, [selected_channel_index])
 
     return (
         <div class="channel-container" id={`channel-${selected_channel_index}-container`}>
@@ -301,7 +324,7 @@ const ChannelDetailsTable = () => {
         </div>
     )
 }
-// TD: refactor these into other file
+
 const InvestmentDropdown = ({onChange_, value_}) => {
     return ( // /\: truncate dropdown width
         <select onChange={onChange_} value={value_}>
@@ -430,9 +453,7 @@ const App = () => {
     }
     document.getElementById("overlay_id").style.setProperty("visibility", "hidden"); // LT: only become hidden /\ both ~ & js script loaded -> component th has custom attr ß storing whether some script loaded (prob ~ bc ~::first)
 }
-// TD: <PRIORITY> randomize a time series ß universe average -> change table::$channel <= ?timefr sel-d
-    // - create chart component in React
-    // - pass current channel timeseries on re-render <= const in scope°°App()
+
 ReactDOM.render(
     <App/>,
     document.getElementById("root")

@@ -5,6 +5,7 @@
 	<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 	<script type="module" src="./data.js"></script>
 	<!-- <script type="text/babel" data-type="module" src="./ChartComponent.jsx"></script> -->
+	<!-- <script type="text/babel" data-type="module" src="basic_components.jsx"></script> -->
 	<script type="text/babel" data-type="module" src="components.jsx"></script>
 	<head>
 		<meta charset="utf-8" />
@@ -148,9 +149,7 @@
 			</aside>
 			<!-- vertical align middle doesnt work, padding seems to deattach buttons from chart and their position for some reason cannot be relativized to chart (inner) div -->
 			<section class="main">
-				<div class="chart_flex" id="chart-flexbox"> <!-- RENDER HERE -->
-					
-				</div>
+				<div class="chart_flex" id="chart-flexbox"></div>
 				<div class="switch-channel-container">
 					<button id="button-prev" class="glowing_button" style="float: right;">
 						<i class="fas fa-solid fa-arrow-left"></i>
@@ -169,6 +168,5 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
 	<script src="./index.js"></script>
 	<script type="module" src="./channel_i.js"></script>
-	<!-- <script type="module" src="./components.jsx"></script> -->
 </html>
 <!-- TD: Hourglass does not appear on loading screen #> it does but w a few secs delay & pg usually loads faster than th #> it actually works fine but thd anim switches too slowly -->
