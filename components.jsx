@@ -46,8 +46,8 @@ function wrapChartElement(context_, data_, labels_) {
                     label: "Changes in index of [] channel", //mellette info ikon -> "The chart will show index fluctuations over a recent interval, the span of which can be selected on the top right"
                     data: data_, //TD: chg to arr.slice (1d) or other to be default
                     backgroundColor: ["rgba(0,0,0,0.95)"],
-                    borderColor: ["rgba(255, 99, 132, 1)"],
-                    color: ["rgba(127,255,0,1)"],
+                    borderColor: ["chartreuse"], // I: sets color of points
+                    color: ["red"],
                 },
             ],
         },
@@ -65,7 +65,12 @@ function wrapChartElement(context_, data_, labels_) {
                         maxRotation: 90,
                         minRotation: 90,
                     }
-                },
+                }
+            },
+            legend: {
+                labels: {
+                    fontColor: "chartreuse"
+                }
             },
         },
     });
