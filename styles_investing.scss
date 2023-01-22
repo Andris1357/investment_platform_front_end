@@ -9,6 +9,23 @@ $hover_button_count: 4;
     }
 }
 
+table {
+    th, td {
+        padding: 5px;
+    }
+    tr {
+        &:first-child {
+            font-weight: bold;
+        }
+        td:first-child {
+            text-align: left;
+        }
+    }
+    td + td {
+        text-align: center;
+    }
+}
+
 .info_hover_anchor { // I: relativizing position does not work with outer element defined by id (#)
     position: relative;
     display: inline-block;
@@ -41,7 +58,7 @@ $hover_button_count: 4;
         position: absolute;
         right: 20px;
         top: 20px;
-    }
+    } // I: absolute positions apply to each other as in a tree structure where the parent is always the thinker branch
     input[type=range]::-moz-range-track {
         background: chartreuse;
         width: 100%;
@@ -53,6 +70,22 @@ $hover_button_count: 4;
     }
     input[type=range] {
         width: 70px
+    }
+}
+
+.stake_popup_content {
+    margin-left: 20px;
+    margin-top: 15px;
+    font-size: 13px; // display: flex /\: is this ever needed? maybe when the page gets crunched?
+
+    & > tr > td {
+        white-space: nowrap;
+        padding: 10px;
+        
+    }
+    & > tr {
+        padding-top: 30px;
+        padding-bottom: 50px
     }
 }
 

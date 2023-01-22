@@ -30,47 +30,6 @@
         border-radius: 1px;
     }
     /* states:{logged in / ¤~} */
-    .stake_popup {
-        display: inline-block;
-        width: 700px;
-        height: 250px;
-        border-radius: 5px;
-        color: chartreuse;
-        border: 3px solid chartreuse;
-        position: absolute;
-        bottom: 60px;
-        left: 0px;
-        background-color: black;
-        visibility: hidden;
-        z-index: 2
-    }
-    /* .stake_btn .show {
-        visibility: visible
-    }
-    .stake_btn .hide {
-        visibility: hidden
-    } */
-    .stake_max_btn {
-        border: none;
-        background-color: black;
-        color: chartreuse;
-    }
-    .stake_max_btn:hover {
-        color: red;
-    }
-    .stake_popup input[type=range] {
-        width: 70px
-    }
-    .stake_popup input[type=range]::-moz-range-track {
-        background: chartreuse;
-        width: 100%;
-        height: 10px;
-        cursor: pointer;
-        box-shadow: 1px 1px 1px #000000;
-
-        border-radius: 5px;
-        border: 1px solid #000000;
-    }  
     input[type=range]::-webkit-slider-thumb {
         box-shadow: 1px 1px 1px #000000;
         border: 1px solid #000000;
@@ -82,23 +41,13 @@
         -webkit-appearance: none;
         margin-top: -4px; /*make thinner & change slide fill color */
     }
-    .stake_popup .stake_exit_btn {
-        position: absolute;
-        right: 20px;
-        top: 20px;
-        /* absolute positions apply to each other as in a tree struct def-d by their div struct */
-    }
+    
     .stake_exit_btn {
         background-color: transparent;
         border: none;
         color:chartreuse;
     }
-    .stake_popup_content {
-        margin-left: 20px;
-        margin-top: 15px;
-        font-size: 13px;
-        /* display: flex */
-    }
+    
     .td_left_spaced {
         text-align: left;
         padding: 10px 0 10px 0;
@@ -114,13 +63,6 @@
         margin-left: 0px
     }
 
-    table th, td {
-        padding: 2px /*this does not work yet */
-    }
-
-    td + td {
-        text-align: center;
-    }
     /* does not identify rowgroups */
     .switch-channel-container {
         display: flex; 
@@ -150,17 +92,6 @@
         border-width: 5px;
         top: 100%;
         left: calc(50% - 5px)
-    }
-    /* table padding doesnt work yet */
-    .stake_popup_content > tr > td {
-        white-space: nowrap;
-        padding: 10px;
-        
-    }
-
-    .stake_popup_content > tr {
-        padding-top: 30px;
-        padding-bottom: 50px
     }
 
     .sidebar {
@@ -282,27 +213,14 @@
     .theader {
         font-weight: bolder;
     }
-
-    table tr td:first-child {
-        text-align: left;
-        /* min-width: 25%;
-        max-width: 25%; */
-        /* max-width: 7em; */
-    }
-
     /* table tr td ~ td {
         min-width: 25%;
         max-width: 25%;
     } */
-
     #static-attributes-header table tr td {
         min-width: 25%;
         max-width: 25%;
         max-height: 30px;
-    }
-
-    table tr:first-child {
-        font-weight: bold;
     }
 
     .stake_btn_container table {

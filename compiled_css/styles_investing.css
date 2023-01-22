@@ -12,6 +12,19 @@
   display: inline;
 }
 
+table th, table td {
+  padding: 5px;
+}
+table tr:first-child {
+  font-weight: bold;
+}
+table tr td:first-child {
+  text-align: left;
+}
+table td + td {
+  text-align: center;
+}
+
 .info_hover_anchor {
   position: relative;
   display: inline-block;
@@ -68,6 +81,20 @@
 }
 .stake_popup input[type=range] {
   width: 70px;
+}
+
+.stake_popup_content {
+  margin-left: 20px;
+  margin-top: 15px;
+  font-size: 13px;
+}
+.stake_popup_content > tr > td {
+  white-space: nowrap;
+  padding: 10px;
+}
+.stake_popup_content > tr {
+  padding-top: 30px;
+  padding-bottom: 50px;
 }
 
 .stake_max_btn {
