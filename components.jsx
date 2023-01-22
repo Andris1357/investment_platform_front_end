@@ -1,3 +1,4 @@
+// import React from "react"; // #> uncomment this to kill app & show loading screen
 import * as Data from "./data.js"
 // import {InvestmentDropdown, DisabledTextbox, InfoHoverIcon, CategoryWithInfo} from "./basic_components.jsx"
 
@@ -254,7 +255,7 @@ const ChannelDetailsTable = () => {
     document.getElementById("button-prev").addEventListener("click", () => {
         selectChannel(current_index_ => current_index_ >= 1 ? current_index_ - 1 : current_index_)
     })
-    
+
     let channel = Data.channels[selected_channel_index];
 
     React.useEffect(() => {

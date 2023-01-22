@@ -54,10 +54,6 @@
         font-size: 16px;
     }
 
-    .channel_stats table tr ~ td {
-        text-align: left;
-    }
-
     .sidebar hr {
         width: 100%;
         margin-left: 0px
@@ -72,28 +68,6 @@
         margin-bottom: 15px;
     }
 
-    .info_hover {
-        visibility: hidden;
-        display: inline;
-        background-color: #555;
-        color: #fff;
-        z-index: 1;
-        border-radius: 6px;
-        padding: 4px 5px;
-        font-size: small;
-        white-space: nowrap
-    }
-
-    .info_hover::after {
-        content: "";
-        position: absolute;
-        border-style: solid;
-        border-color: #555 transparent transparent transparent;
-        border-width: 5px;
-        top: 100%;
-        left: calc(50% - 5px)
-    }
-
     .sidebar {
         /* width: 39%; */
         float: left;
@@ -101,10 +75,6 @@
         position: relative;
         grid-area: sidebar;
         display: grid
-    }
-
-    .channel_stats table {
-        width: 100%
     }
 
     .main {
@@ -184,26 +154,6 @@
         border-color: chartreuse;
     }
 
-    .channel_stats {
-        position: relative;
-        /* ??: insert vertical-align or create subdiv w disp:flex & vert center */
-    }
-
-    .stats_flex{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        height: calc(100vh - 85px);
-        width: 100%;
-    }
-
-    .chart_flex {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        height: calc(100vh - 85px);
-        width: 100%;
-    }
     .flex_row_inhibit {
         width: 100%;
     }
@@ -225,10 +175,6 @@
 
     .stake_btn_container table {
         width: 80%;
-    }
-    .channel_stats table { /* I: this does not work with a <table> generated as a React component */
-        margin: 15px 0;
-        font-size: 13px;
     }
     .chart_wrap {
         position: relative;
@@ -314,12 +260,6 @@
         border-radius: 3px; 
         color: rgb(19, 168, 19);
     }
-    .channel_stats input[type=text] {
-        background-color: rgb(5, 5, 15); 
-        border-radius: 3px; 
-        color: rgb(19, 168, 19);
-        text-align: right;
-    }
     .wm {
         font-size: 14px;
         color: rgba(210, 50, 70, 0.8);
@@ -381,31 +321,6 @@
         display: flex;
         vertical-align: middle;
         justify-content: center;
-    }
-
-    .fa-hourglass-half {
-        font-size: 36px;
-    }
-
-    .fa-hourglass-half:before {
-        animation-name: loading;
-        animation-duration: 0.5s;
-        animation-iteration-count: infinite;
-    }
-
-    @keyframes loading {
-        0% {
-            content: "\f251"
-        }
-        33.3% {
-            content: "\f252"
-        }
-        66.7% {
-            content: "\f253"
-        }
-        100% {
-            content: "\f251"
-        }
     }
 
     /* @media screen and (min-width: 801px), 
