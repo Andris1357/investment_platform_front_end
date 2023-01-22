@@ -28,8 +28,8 @@ function hoverUseStateEL(element_id_, useStateCallable_) {
 }
 
 function getIconIndex(element) {
-    return element.tagName == this; //findIndex takes second opt arg as to be substituted for used func's ßthis ref
-} // TD: fix amounts watermark placement in vertical view
+    return element.tagName == this; // I: findIndex() takes second opt arg as to be substituted for used func's ßthis ref
+} // /\: fix amounts watermark placement in vertical view #> does not occur most of the time
 
 function wrapChartElement(context_, data_, labels_) {
     return new Chart(context_, {
@@ -41,7 +41,7 @@ function wrapChartElement(context_, data_, labels_) {
                     label: "Changes in index of [] channel", //mellette info ikon -> "The chart will show index fluctuations over a recent interval, the span of which can be selected on the top right"
                     data: data_, //TD: chg to arr.slice (1d) or other to be default
                     backgroundColor: ["rgba(0,0,0,0.95)"],
-                    borderColor: ["chartreuse"], // I: sets color of points
+                    borderColor: ["rgba(77, 185, 45)"], // I: sets color of points
                     color: ["red"],
                 },
             ],
@@ -64,7 +64,7 @@ function wrapChartElement(context_, data_, labels_) {
             },
             legend: {
                 labels: {
-                    fontColor: "chartreuse"
+                    fontColor: "chartreuse" // /\: this does not work currently
                 }
             },
         },
@@ -88,9 +88,8 @@ function calculateChartData(timeframe_value_, channel_index_) {
                 break;
             default:
                 labels = Data.labels_1_3; // I: meaning an array of dates where the first 3 largest increments of time are specified, e.g. 2022.01.21.
-        } // TD: w real time -> for last 24 hours, get last 24/freq points
+        } // ??: w real time -> for last 24 hours, get last 24/freq points
     
-        console.log(`timeframe: ${timeframe_value_} timeseries: ${timeseries}`)
         return [
             timeseries.slice(
                 timeseries.length - Number(timeframe_value_) / Data.index_update_frequency, 
@@ -153,7 +152,7 @@ const ChartArea = () => {
         
         if (getComputedStyle(event_.target).color == "rgb(127, 255, 0)") { // I: checks if color is chartreuse
             event_.target.style.color = "rgb(255, 60, 0)";
-            event_.target.style.borderColor = "rgb(255, 180, 180) rgb(245, 130, 70) rgb(180, 20, 20) rgb(210, 40, 35)"; //TD: do the labels chg respective to the x values shrinking? -> labels do not chg & x-values do not blow up to fill chart
+            event_.target.style.borderColor = "rgb(255, 180, 180) rgb(245, 130, 70) rgb(180, 20, 20) rgb(210, 40, 35)"; //??: do the labels chg respective to the x values shrinking? -> labels do not chg & x-values do not blow up to fill chart
             
             for (let timeframe_button_ of [...document.getElementsByClassName("set_timefr")]) {
                 if (timeframe_button_.value == event_.target.value) {
@@ -251,10 +250,11 @@ const ChannelDetailsTable = () => {
         selectChannel(current_index_ => {
             return current_index_ < Data.channels.length - 1 ? current_index_ + 1 : current_index_
         });
-	}) // TD: these btns sh be disabled if user cannot go anymore in that direction | turn font black
+	})
     document.getElementById("button-prev").addEventListener("click", () => {
         selectChannel(current_index_ => current_index_ >= 1 ? current_index_ - 1 : current_index_)
     })
+    
     let channel = Data.channels[selected_channel_index];
 
     React.useEffect(() => {
@@ -467,5 +467,5 @@ for (let anchor_i_ = 1; anchor_i_ <= info_timeseries.length; anchor_i_++) {
     });
     document.getElementById(`info_hover_anchor_${anchor_i_}`).addEventListener("mouseleave", () => {
         document.getElementById(`info_hover_${anchor_i_}`).style.visibility = "hidden";
-    }); console.log(`attached to ${anchor_i_}`)
+    });
 }

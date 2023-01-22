@@ -16,150 +16,151 @@
 	<style></style>
 	<div id="root"></div>
 	<body>
-		<!-- TD: integrate button hover anim :: borders sh coalesce w the border of hover anim -->
-		<!-- MT: page for buying & selling tokens ß eth, administering own account that changes based on whether the user :: (investor|channel owner) <= React -->
-		<!-- jelenleg a headerek nem képezik a grid részét mert nem a .container alatt vannak -><- ha berakom, a szélessége összeesik, a chart megfelelő helyre kerül \ container még mindig túlnyúlik jobbra -->
-		<div class="header-left"></div>
-		<div class="header-right">
-			<input type="text" id="username" disabled value="wallet_hash" />
-			<div class="space"></div>
-			<i class="far fa-user"></i>
-			<div class="space"></div>
-			<i class="fas fa-chart-line"></i>
-			<div class="space"></div>
-		</div>
-		<div class="overlay" id="overlay_id">
-			<div class="overlay_centre_img">
-				<i class="fas fa-hourglass-half"></i>
+		<div id="wrapper">
+			<!-- TD: integrate button hover anim :: borders sh coalesce w the border of hover anim -->
+			<!-- MT: page for buying & selling tokens ß eth, administering own account that changes based on whether the user :: (investor|channel owner) <= React -->
+			<!-- jelenleg a headerek nem képezik a grid részét mert nem a .container alatt vannak -><- ha berakom, a szélessége összeesik, a chart megfelelő helyre kerül \ container még mindig túlnyúlik jobbra -->
+			<div class="header-left"></div>
+			<div class="header-right">
+				<input type="text" id="username" disabled value="wallet_hash" />
+				<div class="space"></div>
+				<i class="far fa-user"></i>
+				<div class="space"></div>
+				<i class="fas fa-chart-line"></i>
+				<div class="space"></div>
 			</div>
-		</div>
-		<!-- betöltőképernyő: hourglass 3 állapot -> continuous animation (chg every 0.4 or so secs) -->
-		<!-- headert ketté osztani -> both floats text to screen edges -> fill right w icons -> TD: create messages on hover -->
-		<div class="container">
-			<!-- <header>
-            Header
-        </header> -->
-			<!-- put both side contents into a flex div, one by one it sh work -->
-			<div class="sidebar" style="width: 100%;">
-				<!--not including two frames in a subdiv under root_ correctly placed chart div in the middle vertically but somehow not the other -> maybe try setting relative pos for that too?-->
-				<div class="stats_flex">
-					<div class="flex_row_inhibit">
-						<!--if this wrapper wouldnt be here, the two main divs of this block would get placed next to eo-->
-						<div class="channel_stats">
-							<p style="margin: 0px"> <!-- TD: also put this into the component & °update picture & link -->
-								<img src="https://yt3.ggpht.com/ytc/AKedOLRkU2-RDemsCSaVVsPwc-yxtWruCB1Gr2VIgQKOKg=s88-c-k-c0x00ffffff-no-rj" class="channel_img" />
-								<!-- make img corners slightly opaque to fade into backgr -->
-								<span class="channel_name">freeCodeCamp.org</span>
-								<a href="channel_link"><i class="fas fa-external-link-alt"></i></a>
-							</p>
-							<!--update w date of last row in db where channel_id==-->
-							<div id="static-attributes" class="channel_stats"></div>
-						</div>
-						<!-- TD: change naming of class to be related to the group, not this instance -->
-						<div class="stake_btn_container">
-							<button class="glowing_button" id="stake_btn_id">Invest in<br>this channel</button>
-							<div class="stake_popup" id="stake_popup_id">
-								<table class="stake_popup_content">
-									<tr>
-										<td>
-											<label for="to_stake">Amount to stake</label>
-											<input type="text" id="to_stake" style="width: 40px" />
-											<button class="stake_max_btn">MAX</button>
-											<button class="stake_exit_btn" id="stake_exit_btn_id">
-												<i class="fas fa-times"></i>
-											</button>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<label for="risk_range">Risk tolerance</label>
-											<input type="range" id="risk_range" value="50" />
-										</td>
-										<!--indeed 100 is the default range value spectrum-->
-										<td>
-											<span>Yield modifier</span>
-											<input type="text" style="width: 20px" disabled />
-											<nobr>
-												<div class="info_hover_anchor" id="info_hover_anchor_2">
-													<i class="fas fa-info-circle"></i>
-													<div class="info_hover" id="info_hover_2">Beware, the applied modifier works both ways, your losses may be magnified.</div>
-												</div>
-											</nobr>
-										</td>
-										<!--will have to convert it to an inline div to be able to relativize popup-->
-									</tr>
-									<tr>
-										<td>
-											<span>Lock period</span>
-											<select>
-												<option value="1">1 month</option>
-												<option value="3">3 months</option>
-											</select>
-										</td>
-										<td>
-											<span>Yield modifier</span>
-											<input type="text" style="width: 20px" disabled />
-											<span class="info_hover_anchor" id="info_hover_anchor_3">
-												<div class="info_hover" id="info_hover_3">
-													A longer locking period yields higher potential returns. This multiplier only works upwards.
-												</div>
-												<i class="fas fa-info-circle"></i>
-											</span>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<button class="glowing_button" id="submit_stake">CONFIRM</button>
-										</td>
-									</tr>
-								</table>
+			<div class="overlay" id="overlay_id">
+				<div class="overlay_centre_img">
+					<i class="fas fa-hourglass-half"></i>
+				</div>
+			</div>
+			<!-- betöltőképernyő: hourglass 3 állapot -> continuous animation (chg every 0.4 or so secs) -->
+			<!-- headert ketté osztani -> both floats text to screen edges -> fill right w icons -> TD: create messages on hover -->
+			<div class="container">
+				<!-- <header>
+				Header
+			</header> -->
+				<!-- put both side contents into a flex div, one by one it sh work -->
+				<div class="sidebar" style="width: 100%;">
+					<!--not including two frames in a subdiv under root_ correctly placed chart div in the middle vertically but somehow not the other -> maybe try setting relative pos for that too?-->
+					<div class="stats_flex">
+						<div class="flex_row_inhibit">
+							<!--if this wrapper wouldnt be here, the two main divs of this block would get placed next to eo-->
+							<div class="channel_stats">
+								<p style="margin: 0px"> <!-- NOW: also put this into the component & °update picture & link -->
+									<img src="https://yt3.ggpht.com/ytc/AKedOLRkU2-RDemsCSaVVsPwc-yxtWruCB1Gr2VIgQKOKg=s88-c-k-c0x00ffffff-no-rj" class="channel_img" />
+									<!-- make img corners slightly opaque to fade into backgr -->
+									<span class="channel_name">freeCodeCamp.org</span>
+									<a href="channel_link"><i class="fas fa-external-link-alt"></i></a>
+								</p>
+								<!--update w date of last row in db where channel_id==-->
+								<div id="static-attributes" class="channel_stats"></div>
 							</div>
-						</div>
-						<!-- TD: close these buttons also when clicking at an arbitrary location w/i the pg :: ×ˇ~popup -->
-						<div class="stake_btn_container">
-							<button class="glowing_button" id="investment-list-button">View your active investments<br>on this channel</button>
-							<div class="stake_popup" id="investment-list-popup">
-								<button class="stake_exit_btn" id="investments-exit-button">
-									<i class="fas fa-times"></i>
-								</button>
-								<div id="test-table" class="stake_popup_content"></div>
-								<div style="margin-left: 15px; margin-top: 15px;">
-									<button class="glowing_button" id="break-investment">BREAK LOCK</button>
-									<button class="glowing_button" id="unlock-investment">REDEEM</button>
+							<!-- TD: change naming of class to be related to the group, not this instance -->
+							<div class="stake_btn_container">
+								<button class="glowing_button" id="stake_btn_id">Invest in<br>this channel</button>
+								<div class="stake_popup" id="stake_popup_id">
+									<table class="stake_popup_content">
+										<tr>
+											<td>
+												<label for="to_stake">Amount to stake</label>
+												<input type="text" id="to_stake" style="width: 40px" />
+												<button class="stake_max_btn">MAX</button>
+												<button class="stake_exit_btn" id="stake_exit_btn_id">
+													<i class="fas fa-times"></i>
+												</button>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<label for="risk_range">Risk tolerance</label>
+												<input type="range" id="risk_range" value="50" />
+											</td>
+											<!--indeed 100 is the default range value spectrum-->
+											<td>
+												<span>Yield modifier</span>
+												<input type="text" style="width: 20px" disabled />
+												<nobr>
+													<div class="info_hover_anchor" id="info_hover_anchor_2">
+														<i class="fas fa-info-circle"></i>
+														<div class="info_hover" id="info_hover_2">Beware, the applied modifier works both ways, your losses may be magnified.</div>
+													</div>
+												</nobr>
+											</td>
+											<!--will have to convert it to an inline div to be able to relativize popup-->
+										</tr>
+										<tr>
+											<td>
+												<span>Lock period</span>
+												<select>
+													<option value="1">1 month</option>
+													<option value="3">3 months</option>
+												</select>
+											</td>
+											<td>
+												<span>Yield modifier</span>
+												<input type="text" style="width: 20px" disabled />
+												<span class="info_hover_anchor" id="info_hover_anchor_3">
+													<div class="info_hover" id="info_hover_3">
+														A longer locking period yields higher potential returns. This multiplier only works upwards.
+													</div>
+													<i class="fas fa-info-circle"></i>
+												</span>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<button class="glowing_button" id="submit_stake">CONFIRM</button>
+											</td>
+										</tr>
+									</table>
 								</div>
 							</div>
-						</div>
-						<div style="margin: 10px 0px">
-							<div class="input_wm" id="input_wm1">
-								<label for="orig_stake">Staked amount (total)</label>
-								<div class="space"></div>
-								<input type="text" id="orig_stake" disabled value="10000" />
-								<div class="wm" id="wm1">USD</div>
+							<div class="stake_btn_container">
+								<button class="glowing_button" id="investment-list-button">View your active investments<br>on this channel</button>
+								<div class="stake_popup" id="investment-list-popup">
+									<button class="stake_exit_btn" id="investments-exit-button">
+										<i class="fas fa-times"></i>
+									</button>
+									<div id="test-table" class="stake_popup_content"></div>
+									<div style="margin-left: 15px; margin-top: 15px;">
+										<button class="glowing_button" id="break-investment">BREAK LOCK</button>
+										<button class="glowing_button" id="unlock-investment">REDEEM</button>
+									</div>
+								</div>
 							</div>
-							<br />
-							<div class="input_wm" id="input_wm2">
-								<label for="curr_val">Current value (total)</label>
-								<div class="space"></div>
-								<input type="text" id="curr_val" disabled value="12830" />
-								<div class="wm" id="wm2">USD</div>
+							<div style="margin: 10px 0px">
+								<div class="input_wm" id="input_wm1">
+									<label for="orig_stake">Staked amount (total)</label>
+									<div class="space"></div>
+									<input type="text" id="orig_stake" disabled value="10000" />
+									<div class="wm" id="wm1">USD</div>
+								</div>
+								<br />
+								<div class="input_wm" id="input_wm2">
+									<label for="curr_val">Current value (total)</label>
+									<div class="space"></div>
+									<input type="text" id="curr_val" disabled value="12830" />
+									<div class="wm" id="wm2">USD</div>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+				<!-- vertical align middle doesnt work, padding seems to deattach buttons from chart and their position for some reason cannot be relativized to chart (inner) div -->
+				<section class="main">
+					<div class="chart_flex" id="chart-flexbox"></div>
+					<div class="switch-channel-container">
+						<button id="button-prev" class="glowing_button" style="float: right;">
+							<i class="fas fa-solid fa-arrow-left"></i>
+						</button>
+						<div class="space"></div>
+						<button id="button-next" class="glowing_button" style="float: right;">
+							<i class="fas fa-solid fa-arrow-right"></i>
+						</button>
+					</div>
+				</section>
 			</div>
-			<!-- vertical align middle doesnt work, padding seems to deattach buttons from chart and their position for some reason cannot be relativized to chart (inner) div -->
-			<section class="main">
-				<div class="chart_flex" id="chart-flexbox"></div>
-				<div class="switch-channel-container">
-					<button id="button-prev" class="glowing_button" style="float: right;">
-						<i class="fas fa-solid fa-arrow-left"></i>
-					</button>
-					<div class="space"></div>
-					<button id="button-next" class="glowing_button" style="float: right;">
-						<i class="fas fa-solid fa-arrow-right"></i>
-					</button>
-				</div>
-			</section>
 		</div>
 	</body>
 	<!-- new page -->

@@ -133,7 +133,7 @@
         justify-content: flex-end; 
         direction: ltr; 
         align-items: center; 
-        margin-bottom: 20px;
+        margin-bottom: 15px;
     }
 
     .info_hover_anchor #info_hover_1 {
@@ -238,6 +238,11 @@
         top: 7px;
     }
 
+    #wrapper {
+        border: solid 4px rgb(17, 42, 5);
+        height: 100vh - 6px;
+    }
+
     .set_timefr {
         border-radius: 3px;
         border-color: rgb(200, 255, 180) rgb(127, 255, 0) 
@@ -280,7 +285,7 @@
 
     .channel_stats {
         position: relative;
-        /* TD: insert vertical-align or create subdiv w disp:flex & vert center */
+        /* ??: insert vertical-align or create subdiv w disp:flex & vert center */
     }
 
     .stats_flex{
@@ -438,12 +443,14 @@
         bottom: 50px;
         display: inline;
     }
+
     #input_wm2 #wm2 {
         position: absolute;
         left: 20px;
         bottom: 50px;
         display: inline;
     }
+
     #stats_score, #stats_date {
         float: middle;
         width: 100px;
@@ -472,11 +479,13 @@
             /* width: auto; */
         }
     }
+
     @media (orientation: portrait) {
         .chart {
             height: 40vh;
         }
     }
+
     .overlay {
         background-color: rgb(27, 211, 122);
         position: fixed;
@@ -487,6 +496,7 @@
         z-index: 2;
         visibility: visible;
     }
+    
     .overlay_centre_img {
         top: calc(50% - 24px); /*subtract half of hourglass height*/
         left: calc(50% - 18px);
@@ -497,14 +507,17 @@
         vertical-align: middle;
         justify-content: center;
     }
+
     .fa-hourglass-half {
         font-size: 36px;
     }
+
     .fa-hourglass-half:before {
         animation-name: loading;
-        animation-duration: 0.8s;
+        animation-duration: 0.5s;
         animation-iteration-count: infinite;
     }
+
     @keyframes loading {
         0% {
             content: "\f251"
