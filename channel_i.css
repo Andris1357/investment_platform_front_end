@@ -122,42 +122,12 @@
         text-align: center;
     }
     /* does not identify rowgroups */
-    .info_hover_anchor {
-        /* cursor: pointer; */
-        position: relative;
-        display: inline-block
-    }
-
     .switch-channel-container {
         display: flex; 
         justify-content: flex-end; 
         direction: ltr; 
         align-items: center; 
         margin-bottom: 15px;
-    }
-
-    .info_hover_anchor #info_hover_1 {
-        position: absolute;
-        bottom: 125%;
-        left: 0px;
-    }
-    /* relativizing pos does not work w outer eleme def-d by id */
-    .info_hover_anchor #info_hover_2 {
-        position: absolute;
-        bottom: 125%;
-        left: 0px;
-    }
-/* MT: replace these w scss loop */
-    .info_hover_anchor #info_hover_3 {
-        position: absolute;
-        bottom: 125%;
-        left: 0px;
-    }
-
-    .info_hover_anchor #info_hover_4 {
-        position: absolute;
-        bottom: 125%;
-        left: 0px;
     }
 
     .info_hover {
@@ -436,19 +406,6 @@
         font-size: 14px;
         color: rgba(210, 50, 70, 0.8);
         top: 3px;
-    }
-    #input_wm1 #wm1 {
-        position: absolute;
-        left: 20px;
-        bottom: 50px;
-        display: inline;
-    }
-
-    #input_wm2 #wm2 {
-        position: absolute;
-        left: 20px;
-        bottom: 50px;
-        display: inline;
     }
 
     #stats_score, #stats_date {

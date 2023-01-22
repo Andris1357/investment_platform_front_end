@@ -1,0 +1,67 @@
+$hover_button_count: 4;
+
+@for $watermark_i_ from 1 through 2 {
+    #input_wm#{$watermark_i_} #wm#{$watermark_i_} {
+        position: absolute;
+        left: 20px;
+        bottom: 50px;
+        display: inline;
+    }
+}
+
+.info_hover_anchor { // I: relativizing position does not work with outer element defined by id (#)
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+
+    @for $info_hover_index_ from 1 through $hover_button_count {
+        & #info_hover_#{$info_hover_index_} {
+            position: absolute;
+            bottom: 125%;
+            left: 0px;
+        }
+    }
+}
+// TD: fix first icon not having its message correctly centered on first hover
+.stake_popup {
+    display: inline-block;
+    width: 700px;
+    height: 250px;
+    border-radius: 5px;
+    color: chartreuse;
+    border: 3px solid chartreuse;
+    position: absolute;
+    bottom: 60px;
+    left: 0px;
+    background-color: black;
+    visibility: hidden;
+    z-index: 2;
+
+    .stake_exit_btn {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+    }
+    input[type=range]::-moz-range-track {
+        background: chartreuse;
+        width: 100%;
+        height: 10px;
+        cursor: pointer;
+        box-shadow: 1px 1px 1px #000000;
+        border-radius: 5px;
+        border: 1px solid #000000;
+    }
+    input[type=range] {
+        width: 70px
+    }
+}
+
+.stake_max_btn {
+    border: none;
+    background-color: black;
+    color: chartreuse;
+
+    &:hover {
+        color: red;
+    }
+}
