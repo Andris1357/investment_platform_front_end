@@ -46,7 +46,7 @@ class Channel {
         this.score_timeseries = score_timeseries_;
     }
 }
-
+// NOW: GENERATE MORE DATA FOR {INVESTMENTS ON CRT CHANNELS, TOTAL INVESTMENT VALUES}
 export const index_update_frequency = 2; // I: every x hours (<1 if more over 1 hour), in future get this value dynamically, based on the current freq
 const timeseries_max_length = 9760;
 export const last_updated = "2021.09.30"; // LT: query fr DB
@@ -106,7 +106,7 @@ export const metric_category_style = { // !: <span>.padding does not transfer to
     fontSize: "16px", 
     textDecoration: "underline",
     fontWeight: "bold",
-};
+}; // TD: these may be duplications - try w scss
 export const hover_message_style = {
     position: "absolute", 
     bottom: "125%", 
