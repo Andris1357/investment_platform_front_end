@@ -113,6 +113,7 @@ function calculateChartData(timeframe_value_, channel_index_) {
 }
 
 var chart_global;
+
 const ChartComponent = ({timeframe_, channel_index_}) => {
     const chart_ref = React.useRef();
     let [calculated_timeseries, calculated_labels] = calculateChartData(timeframe_, channel_index_);
@@ -224,14 +225,13 @@ const TableRow = ({cells_data}) => {
     )
 }
 
-const InvestmentDetailsTable = () => {
+const InvestmentDetailsTable = () => { // MT: feature to break lock & increase user tokens (displayed on menu ribbon) & invest fr a custom # of tokens where new investments will show up in the dropdown
     const [selected_investment_id, selectInvestment] = React.useState(Data.channels[0].user_investments[0].investment_id);
     const [selected_channel_index, selectChannel] = React.useState(0);
     const [viewed_investment, selectInvestmentObject] = React.useState(getInvestmentByIdAndChannel(
         selected_investment_id, 
         selected_channel_index
     ))
-    console.log(selected_channel_index, selected_investment_id, viewed_investment)
 
     document.getElementById("button-next").addEventListener("click", () => {
 		selectChannel(current_index_ => current_index_ < Data.channels.length - 1 ? current_index_ + 1 : current_index_);
@@ -239,7 +239,7 @@ const InvestmentDetailsTable = () => {
     document.getElementById("button-prev").addEventListener("click", () => {
         selectChannel(current_index_ => current_index_ >= 1 ? current_index_ - 1 : current_index_)
     })
-    // NOW: implement same ßuseState here as other places w evenList
+    
     React.useEffect(() => {
         selectInvestmentObject(getInvestmentByIdAndChannel(selected_investment_id, selected_channel_index));
     }, [selected_investment_id])
@@ -300,6 +300,7 @@ const ChannelDetailsTable = () => {
 
     return (
         <div class="channel-container" id={`channel-${selected_channel_index}-container`}>
+            <ChannelHeaderArea channel_index_={selected_channel_index}/>
             <p style={{fontSize: "18px"}}><strong>Channel statistics</strong></p>
             <hr />
             <Table rows_content={[
@@ -380,6 +381,16 @@ const CategoryWithInfo = ({label_text_, info_id_, info_text_}) => {
     )
 } // LT: search bar (in popup?) ß channels -> render list of coinciding ones & switch to selected on submit
 
+const ChannelHeaderArea = ({channel_index_}) => { // /\: make img corners slightly opaque to fade into backgr
+    return (
+        <p style={{margin: "0px"}}>
+            <img src={Data.channels[channel_index_].image_source} class="channel_img" />
+            <span class="channel_name">    {Data.channels[channel_index_].name}    </span>
+            <a href={Data.channels[channel_index_].link}><i class="fas fa-external-link-alt"></i></a>
+        </p>
+    )
+}
+
 const rendered_components = [
     new RenderedComponent(
         <InvestmentDetailsTable/>,
@@ -392,7 +403,7 @@ const rendered_components = [
     new RenderedComponent(
         <ChartArea/>,
         document.getElementById("chart-flexbox")
-    )
+    ),
 ]
 
 const App = () => {
@@ -421,7 +432,7 @@ const App = () => {
         ["stake_popup_id", isMouseOverstakePopup],
         ["stake_btn_id", isMouseOverStakeButton],
     ]
-    const hover_popup_timeseries = document.getElementsByClassName("info_hover");
+    const hover_popup_timeseries = document.getElementsByClassName("info_hover"); // ?: it seems as if centering top hover message would be a cause of an eventlistener added on hover & maybe this is why it only triggers after some time after first contact...
 
     for (let child of hover_popup_timeseries) {
         let converted_outerHTML_array = [

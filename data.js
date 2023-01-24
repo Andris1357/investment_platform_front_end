@@ -1,12 +1,12 @@
 class InvestmentAttribute {
-    constructor(label_, value_) {
+    constructor (label_, value_) {
         this.label = label_;
         this.value = value_;
     }
 }
 
 class Investment {
-    constructor(investment_id_, time_until_lock_expires_, invested_tokens_, current_value_) {
+    constructor (investment_id_, time_until_lock_expires_, invested_tokens_, current_value_) {
         this.investment_id = investment_id_;
         this.time_until_lock_expires = time_until_lock_expires_;
         this.invested_tokens = invested_tokens_;
@@ -15,7 +15,7 @@ class Investment {
 }
 
 class Metric {
-    constructor(label_, individual_value_, universe_average_, individual_modifier_) {
+    constructor (label_, individual_value_, universe_average_, individual_modifier_) {
         this.label = label_;
         this.individual_value = individual_value_;
         this.universe_average = universe_average_;
@@ -24,7 +24,7 @@ class Metric {
 }
 
 class Channel {
-    constructor(
+    constructor (
         name_,
         score_, 
         subscriber_count_, 
@@ -35,6 +35,8 @@ class Channel {
         platform_score_change_,
         score_timeseries_,
         user_investments_,
+        image_source_,
+        link_,
     ) {
         this.name = name_;
         this.score = score_;
@@ -46,9 +48,11 @@ class Channel {
         this.platform_score_change = platform_score_change_;
         this.score_timeseries = score_timeseries_;
         this.user_investments = user_investments_;
+        this.image_source = image_source_;
+        this.link = link_;
     }
 }
-// NOW: GENERATE MORE DATA FOR {INVESTMENTS ON CRT CHANNELS, TOTAL INVESTMENT VALUES}
+// /\: GENERATE MORE DATA FOR {INVESTMENTS ON CRT CHANNELS, TOTAL INVESTMENT VALUES} #> should not the total value be shown for all channels?
 export const index_update_frequency = 2; // I: every x hours (<1 if more over 1 hour), in future get this value dynamically, based on the current freq
 const timeseries_max_length = 9760;
 export const last_updated = "2021.09.30"; // LT: query fr DB
@@ -79,7 +83,7 @@ export const investments = [ // LT: sh come from DB
 
 export const channels = [
     new Channel(
-        "Channel A",
+        "Channel 1",
         1.4804627,
         new Metric("Subscriber count", 125318, 279214, "+2.85%"),
         new Metric("Currently staking", 9738, 620, "-10.58%"),
@@ -101,10 +105,12 @@ export const channels = [
                 new InvestmentAttribute("Invested tokens", 20734),
                 new InvestmentAttribute("Current value", 17836)
             ),
-        ]
+        ],
+        "https://tse1.mm.bing.net/th?id=OIP.7c-hqo11ia_yd5fcGU7hGgHaF7&pid=Api&rs=1&c=1&qlt=95&w=130&h=104",
+        "#",
     ),
     new Channel(
-        "Channel B",
+        "Channel 2",
         1.8936851,
         new Metric("Subscriber count", 66389, 279214, "+2.85%"),
         new Metric("Currently staking", 148, 620, "+0.59%"),
@@ -132,7 +138,9 @@ export const channels = [
                 new InvestmentAttribute("Invested tokens", 274695),
                 new InvestmentAttribute("Current value", 344809)
             ),
-        ]
+        ],
+        "https://tse1.mm.bing.net/th?id=OIP.qJ24xXHXJKEtx9h-4_rZwAHaF7&pid=Api&rs=1&c=1&qlt=95&w=136&h=108",
+        "#",
     ),
 ];
 

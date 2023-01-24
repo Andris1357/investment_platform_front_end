@@ -47,13 +47,7 @@
 					<div class="stats_flex">
 						<div class="flex_row_inhibit">
 							<!--if this wrapper wouldnt be here, the two main divs of this block would get placed next to eo-->
-							<div class="channel_stats">
-								<p style="margin: 0px"> <!-- NOW: also put this into the component & °update picture & link -->
-									<img src="https://yt3.ggpht.com/ytc/AKedOLRkU2-RDemsCSaVVsPwc-yxtWruCB1Gr2VIgQKOKg=s88-c-k-c0x00ffffff-no-rj" class="channel_img" />
-									<!-- make img corners slightly opaque to fade into backgr -->
-									<span class="channel_name">freeCodeCamp.org</span>
-									<a href="channel_link"><i class="fas fa-external-link-alt"></i></a>
-								</p>
+							<div id="channel-header" class="channel_stats">
 								<!--update w date of last row in db where channel_id==-->
 								<div id="static-attributes" class="channel_stats"></div>
 							</div>
@@ -130,18 +124,18 @@
 									</div>
 								</div>
 							</div>
-							<div style="margin: 10px 0px">
+							<div id="investment-profit" style="margin: 10px 0px">
 								<div class="input_wm" id="input_wm1">
 									<label for="orig_stake">Staked amount (total)</label>
 									<div class="space"></div>
-									<input type="text" id="orig_stake" disabled value="10000" />
+									<input type="text" id="orig_stake" disabled value="7028" />
 									<div class="wm" id="wm1">USD</div>
 								</div>
 								<br />
 								<div class="input_wm" id="input_wm2">
 									<label for="curr_val">Current value (total)</label>
 									<div class="space"></div>
-									<input type="text" id="curr_val" disabled value="12830" />
+									<input type="text" id="curr_val" disabled value="8851" />
 									<div class="wm" id="wm2">USD</div>
 								</div>
 							</div>
