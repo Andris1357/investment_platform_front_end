@@ -9,8 +9,9 @@ class RenderedComponent {
     }
 }
 
-function getInvestmentById(id_) {
-    return Data.investments.filter(object_ => object_.investment_id == id_)[0]
+function getInvestmentByIdAndChannel(id_, channel_id_) {
+    console.log(Data.channels[channel_id_].user_investments.filter(object_ => object_.investment_id == id_)[0])
+    return Data.channels[channel_id_].user_investments.filter(object_ => object_.investment_id == id_)[0]
 }
 
 function clickVisibilityEventListener(anchor_id_, target_id_, visibility_, useStateCallable_=null) {
@@ -224,20 +225,38 @@ const TableRow = ({cells_data}) => {
 }
 
 const InvestmentDetailsTable = () => {
-    const [selected_investment_id, selectInvestment] = React.useState(Data.investments[0].investment_id);
-    let investment = getInvestmentById(selected_investment_id);
-    
+    const [selected_investment_id, selectInvestment] = React.useState(Data.channels[0].user_investments[0].investment_id);
+    const [selected_channel_index, selectChannel] = React.useState(0);
+    const [viewed_investment, selectInvestmentObject] = React.useState(getInvestmentByIdAndChannel(
+        selected_investment_id, 
+        selected_channel_index
+    ))
+    console.log(selected_channel_index, selected_investment_id, viewed_investment)
+
+    document.getElementById("button-next").addEventListener("click", () => {
+		selectChannel(current_index_ => current_index_ < Data.channels.length - 1 ? current_index_ + 1 : current_index_);
+	})
+    document.getElementById("button-prev").addEventListener("click", () => {
+        selectChannel(current_index_ => current_index_ >= 1 ? current_index_ - 1 : current_index_)
+    })
+    // NOW: implement same ßuseState here as other places w evenList
+    React.useEffect(() => {
+        selectInvestmentObject(getInvestmentByIdAndChannel(selected_investment_id, selected_channel_index));
+    }, [selected_investment_id])
+
     return (
         <Table rows_content={[
             [
                 "Select investment", 
-                <InvestmentDropdown onChange_={
-                    event_ => selectInvestment(event_.target.value)
-                } value_={selected_investment_id}/>
+                <InvestmentDropdown 
+                    onChange_={event_ => selectInvestment(event_.target.value)} 
+                    value_={selected_investment_id}
+                    channel_index_={selected_channel_index}
+                />
             ],
-            [investment.time_until_lock_expires.label, investment.time_until_lock_expires.value],
-            [investment.invested_tokens.label, investment.invested_tokens.value],
-            [investment.current_value.label, investment.current_value.value],
+            [viewed_investment.time_until_lock_expires.label, viewed_investment.time_until_lock_expires.value],
+            [viewed_investment.invested_tokens.label, viewed_investment.invested_tokens.value],
+            [viewed_investment.current_value.label, viewed_investment.current_value.value],
         ]}/>
     )
 }
@@ -254,7 +273,7 @@ const ChannelDetailsTable = () => {
 	})
     document.getElementById("button-prev").addEventListener("click", () => {
         selectChannel(current_index_ => current_index_ >= 1 ? current_index_ - 1 : current_index_)
-    })
+    }) // !: MAYBE USE ßUSEEFFECT | ~ W ßuseCallback?
 
     let channel = Data.channels[selected_channel_index];
 
@@ -326,10 +345,10 @@ const ChannelDetailsTable = () => {
     )
 }
 
-const InvestmentDropdown = ({onChange_, value_}) => {
+const InvestmentDropdown = ({onChange_, value_, channel_index_}) => {
     return ( // /\: truncate dropdown width
         <select onChange={onChange_} value={value_}>
-            {Data.investments.map(investment_ => (
+            {Data.channels[channel_index_].user_investments.map(investment_ => (
                 <option>{investment_.investment_id}</option>
             ))}
         </select>
@@ -383,7 +402,7 @@ const App = () => {
     const [stake_popup_visibility, stakePopupVisible] = React.useState(false);
     const [mouse_over_stake_popup, isMouseOverstakePopup] = React.useState(undefined);
     const [mouse_over_stake_button, isMouseOverStakeButton] = React.useState(undefined);
-    const [body_clicked, isBodyClicked] = React.useState(false); // /\: refactor some of these w ßuseRef
+    const [body_clicked, isBodyClicked] = React.useState(false); // ??: refactor some of these w ßuseRef
 
     const visibility_click_EL_args = [ // TD: most of pg components rendered by React --> refactor elements to always have visibility of related hook var passed in
         ["stake_btn_id", "stake_popup_id", true, () => stakePopupVisible(true)],

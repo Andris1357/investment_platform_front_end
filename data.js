@@ -34,6 +34,7 @@ class Channel {
         uploads_count_change_,
         platform_score_change_,
         score_timeseries_,
+        user_investments_,
     ) {
         this.name = name_;
         this.score = score_;
@@ -44,6 +45,7 @@ class Channel {
         this.uploads_count_change = uploads_count_change_;
         this.platform_score_change = platform_score_change_;
         this.score_timeseries = score_timeseries_;
+        this.user_investments = user_investments_;
     }
 }
 // NOW: GENERATE MORE DATA FOR {INVESTMENTS ON CRT CHANNELS, TOTAL INVESTMENT VALUES}
@@ -86,6 +88,20 @@ export const channels = [
         new Metric("Change in count of uploads", 8, 3.71, "+11.38%"),
         new Metric("Change of platform score", "+8.46%", "-0.67%", "-2.38%"),
         generateRandomTimeseries(),
+        [
+            new Investment(
+                "0x4b68d3f5e32e051cd9b9d3b3a3c6e7e6f1a1b2c2d3e3f4b5c5d6e7f8",
+                new InvestmentAttribute("Time until lock expires", "6d 7h 19m"),
+                new InvestmentAttribute("Invested tokens", 335927),
+                new InvestmentAttribute("Current value", 482934)
+            ),
+            new Investment (
+                "0x9a8b7c6d5e4f3g2h1i9a8b7c6d5e4f3g2h1i9a8b7c6d5e4f3g2h1i9",
+                new InvestmentAttribute("Time until lock expires", "2mo 16d 23h 08m"),
+                new InvestmentAttribute("Invested tokens", 20734),
+                new InvestmentAttribute("Current value", 17836)
+            ),
+        ]
     ),
     new Channel(
         "Channel B",
@@ -97,6 +113,26 @@ export const channels = [
         new Metric("Change in count of uploads", 17, 3.71, "+14.95%"),
         new Metric("Change of platform score", "+22.7%", "-0.67%", "-13.64%"),
         generateRandomTimeseries(),
+        [
+            new Investment(
+                "0x2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9",
+                new InvestmentAttribute("Time until lock expires", "1y 0m 19d 15h 4m"),
+                new InvestmentAttribute("Invested tokens", 16839),
+                new InvestmentAttribute("Current value", 276160)
+            ),
+            new Investment (
+                "0x0f1e2d3c4b5a6f7e8d9c0b1a2f3e4d5c6b7a8f9e0d1c2b3a4f5e6d7",
+                new InvestmentAttribute("Time until lock expires", "12h 38m"),
+                new InvestmentAttribute("Invested tokens", 27833),
+                new InvestmentAttribute("Current value", 7512)
+            ),
+            new Investment (
+                "0x5f4e3d2c1b0a5f4e3d2c1b0a5f4e3d2c1b0a5f4e3d2c1b0a5f4e3d2c1",
+                new InvestmentAttribute("Time until lock expires", "2y 6m 20d 2h 27m"),
+                new InvestmentAttribute("Invested tokens", 274695),
+                new InvestmentAttribute("Current value", 344809)
+            ),
+        ]
     ),
 ];
 
