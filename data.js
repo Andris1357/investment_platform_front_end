@@ -175,10 +175,7 @@ const labels_full = Array.from(
     {length: timeseries_max_length}, 
     (_, index) => {
         let date_i = new Date(first_date + index * index_update_frequency * 3.6 * 10 ** 6);
-        return "" + date_i.getFullYear()
-            + "-" + (date_i.getMonth() + 1)
-            + "-" + date_i.getDate()
-            + "." + date_i.getHours() + ":00" // LT: later switch to datetime of db row
+        return "" + date_i.getFullYear() + "-" + (date_i.getMonth() + 1) + "-" + date_i.getDate() + ". " + date_i.getHours() + ":00"; // LT: later switch to datetime of db row
     }
 ); // I: only shows 7-10 labels in total -> label is null if index %% arr.slice.length/10 != 0
 export const labels_1_3 = Array.from(
