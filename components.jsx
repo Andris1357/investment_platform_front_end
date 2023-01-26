@@ -9,6 +9,10 @@ class RenderedComponent {
     }
 }
 
+function $(x) {
+    return document.getElementById(x);
+}
+
 function getInvestmentByIdAndChannel(id_, channel_id_) {
     console.log(Data.channels[channel_id_].user_investments.filter(object_ => object_.investment_id == id_)[0])
     return Data.channels[channel_id_].user_investments.filter(object_ => object_.investment_id == id_)[0]
@@ -16,22 +20,31 @@ function getInvestmentByIdAndChannel(id_, channel_id_) {
 
 function clickVisibilityEventListener(anchor_id_, target_id_, visibility_, useStateCallable_=null) {
     let callable = () => {
-        document.getElementById(target_id_).style.visibility = visibility_ ? "visible" : "hidden"
+        $(target_id_).style.visibility = visibility_ ? "visible" : "hidden"
         if (useStateCallable_ !== null) {
             useStateCallable_();
         }
     };
-    document.getElementById(anchor_id_).addEventListener("click", callable);
+    $(anchor_id_).addEventListener("click", callable);
 }
 
 function hoverUseStateEL(element_id_, useStateCallable_) {
-    document.getElementById(element_id_).addEventListener("mouseenter", () => useStateCallable_(true));
-    document.getElementById(element_id_).addEventListener("mouseleave", () => useStateCallable_(false));
+    $(element_id_).addEventListener("mouseenter", () => useStateCallable_(true));
+    $(element_id_).addEventListener("mouseleave", () => useStateCallable_(false));
 }
 
 function getIconIndex(element) {
     return element.tagName == this; // I: findIndex() takes second opt arg as to be substituted for used func's ßthis ref
 } // /\: fix amounts watermark placement in vertical view #> does not occur most of the time
+
+function clickSetColorEventListener(button_id_, edges_, font_, event_) {
+    let element = document.getElementById(button_id_);
+    let callable = () => {
+        element.style.borderColor = edges_;
+        element.style.color = font_;
+    }
+    element.addEventListener(event_ ? "mousedown" : "mouseup", callable);
+}
 
 function wrapChartElement(context_, data_, labels_) {
     return new Chart(context_, {
@@ -39,7 +52,7 @@ function wrapChartElement(context_, data_, labels_) {
         data: {
             labels: labels_, //omit labels for part of values, so th they can fit on screen -> about 7-10; how to make a label blank?; will this get updated along w values?
             datasets: [
-                {
+                { // NOW: insert channel name when reassigning .label
                     label: "Changes in index of [] channel", //mellette info ikon -> "The chart will show index fluctuations over a recent interval, the span of which can be selected on the top right"
                     data: data_, //TD: chg to arr.slice (1d) or other to be default
                     backgroundColor: ["rgba(0,0,0,0.95)"],
@@ -143,10 +156,10 @@ const ChartArea = () => {
     const [selected_timeframe, selectTimeframe] = React.useState("8760");
     const [selected_channel_index, selectChannel] = React.useState(0);
 
-    document.getElementById("button-next").addEventListener("click", () => {
+    $("button-next").addEventListener("click", () => {
 		selectChannel(current_index_ => current_index_ < Data.channels.length - 1 ? current_index_ + 1 : current_index_);
 	})
-    document.getElementById("button-prev").addEventListener("click", () => {
+    $("button-prev").addEventListener("click", () => {
         selectChannel(current_index_ => current_index_ >= 1 ? current_index_ - 1 : current_index_)
     })
     
@@ -233,10 +246,10 @@ const InvestmentDetailsTable = () => { // MT: feature to break lock & increase u
         selected_channel_index
     ))
 
-    document.getElementById("button-next").addEventListener("click", () => {
+    $("button-next").addEventListener("click", () => {
 		selectChannel(current_index_ => current_index_ < Data.channels.length - 1 ? current_index_ + 1 : current_index_);
 	})
-    document.getElementById("button-prev").addEventListener("click", () => {
+    $("button-prev").addEventListener("click", () => {
         selectChannel(current_index_ => current_index_ >= 1 ? current_index_ - 1 : current_index_)
     })
     
@@ -266,20 +279,20 @@ const InvestmentDetailsTable = () => { // MT: feature to break lock & increase u
 const ChannelDetailsTable = () => {
     const [selected_channel_index, selectChannel] = React.useState(0);
 
-    document.getElementById("button-next").addEventListener("click", () => {
+    $("button-next").addEventListener("click", () => {
         selectChannel(current_index_ => {
             return current_index_ < Data.channels.length - 1 ? current_index_ + 1 : current_index_
         });
 	})
-    document.getElementById("button-prev").addEventListener("click", () => {
+    $("button-prev").addEventListener("click", () => {
         selectChannel(current_index_ => current_index_ >= 1 ? current_index_ - 1 : current_index_)
     }) // !: MAYBE USE ßUSEEFFECT | ~ W ßuseCallback?
 
     let channel = Data.channels[selected_channel_index];
 
     React.useEffect(() => {
-        const button_prev = document.getElementById("button-prev");
-        const button_next = document.getElementById("button-next");
+        const button_prev = $("button-prev");
+        const button_next = $("button-next");
         
         if (selected_channel_index == 0) {
             button_prev.disabled = true;
@@ -391,19 +404,38 @@ const ChannelHeaderArea = ({channel_index_}) => { // /\: make img corners slight
     )
 }
 
+const MenuRibbon = ({}) => {
+    const [selected_menu, selectMenu] = React.useState() // TD: integrate with Next
+
+    const updateMenuIcons = React.useCallback((event_) => { // /\: rewrite value & color checks to hooks
+        selectMenu(event_.target.id);
+        
+        if (getComputedStyle(event_.target).color == "rgb(127, 255, 0)") { // I: checks if color is chartreuse
+            event_.target.style.color = "rgb(255, 60, 0)";
+            
+            for (let icon_ of [...document.getElementsByName("menu-icon")]) {
+                if (icon_.id !== event_.target.id) {
+                    icon_.style.color = "rgb(127, 255, 0)"; //chg to deft color (substitute w finally selected deft)
+                }
+            }
+        }
+    }, []);
+
+    return (
+        <>
+            <div class="space"></div>
+            <i id="user-settings-menu-icon" class="far fa-user" name="menu-icon" style={Data.menu_icon_style} onClick={updateMenuIcons}></i>
+            <i id="investing-menu-icon" class="fas fa-chart-line" name="menu-icon" style={Data.menu_icon_style} onClick={updateMenuIcons}></i>
+            <i id="trade-menu-icon" class="fas fa-coins" name="menu-icon" style={Data.menu_icon_style} onClick={updateMenuIcons}></i>
+        </>
+    )
+}
+
 const rendered_components = [
-    new RenderedComponent(
-        <InvestmentDetailsTable/>,
-        document.getElementById('test-table')
-    ),
-    new RenderedComponent(
-        <ChannelDetailsTable/>,
-        document.getElementById("static-attributes")
-    ),
-    new RenderedComponent(
-        <ChartArea/>,
-        document.getElementById("chart-flexbox")
-    ),
+    new RenderedComponent(<InvestmentDetailsTable/>, $('test-table')),
+    new RenderedComponent(<ChannelDetailsTable/>, $("static-attributes")),
+    new RenderedComponent(<ChartArea/>, $("chart-flexbox")),
+    new RenderedComponent(<MenuRibbon/>, $("header-left")),
 ]
 
 const App = () => {
@@ -436,7 +468,7 @@ const App = () => {
 
     for (let child of hover_popup_timeseries) {
         let converted_outerHTML_array = [
-            ...document.getElementById(child.id).parentNode.children
+            ...$(child.id).parentNode.children
         ];
         let icon_index_outerHTML = converted_outerHTML_array.findIndex(getIconIndex, "I"); 
         let temp_width_icon = document
@@ -467,14 +499,14 @@ const App = () => {
             && mouse_over_investments_popup !== true 
             && mouse_over_investments_button !== true) 
         {
-            document.getElementById("investment-list-popup").style.visibility = "hidden";
+            $("investment-list-popup").style.visibility = "hidden";
             investmentsPopupVisible(false);
         }
         if (stake_popup_visibility === true
             && mouse_over_stake_popup !== true
             && mouse_over_stake_button !== true)
         {
-            document.getElementById("stake_popup_id").style.visibility = "hidden"; // TD: refactor this to a React component of a btn & popup
+            $("stake_popup_id").style.visibility = "hidden"; // TD: refactor this to a React component of a btn & popup
             stakePopupVisible(false);
         }
     }, [body_clicked])
@@ -482,21 +514,51 @@ const App = () => {
     for (let component_ of rendered_components) {
         ReactDOM.render(component_.component, component_.anchor_element_id);
     }
-    document.getElementById("overlay_id").style.setProperty("visibility", "hidden"); // LT: only become hidden /\ both ~ & js script loaded -> component th has custom attr ß storing whether some script loaded (prob ~ bc ~::first)
+    $("overlay_id").style.setProperty("visibility", "hidden"); // LT: only become hidden /\ both ~ & js script loaded -> component th has custom attr ß storing whether some script loaded (prob ~ bc ~::first)
 }
 
-ReactDOM.render(
-    <App/>,
-    document.getElementById("root")
-)
+ReactDOM.render(<App/>, $("root"))
 
 const info_timeseries = [...document.getElementsByClassName("info_hover_anchor")];
 
 for (let anchor_i_ = 1; anchor_i_ <= info_timeseries.length; anchor_i_++) {
-    document.getElementById(`info_hover_anchor_${anchor_i_}`).addEventListener("mouseenter", () => {
-        document.getElementById(`info_hover_${anchor_i_}`).style.visibility = "visible";
+    $(`info_hover_anchor_${anchor_i_}`).addEventListener("mouseenter", () => {
+        $(`info_hover_${anchor_i_}`).style.visibility = "visible";
     });
-    document.getElementById(`info_hover_anchor_${anchor_i_}`).addEventListener("mouseleave", () => {
-        document.getElementById(`info_hover_${anchor_i_}`).style.visibility = "hidden";
+    $(`info_hover_anchor_${anchor_i_}`).addEventListener("mouseleave", () => {
+        $(`info_hover_${anchor_i_}`).style.visibility = "hidden";
     });
+}
+
+const buttons_click_change_color = [
+    "investment-list-button", 
+    "stake_btn_id", 
+    "submit_stake",
+    "unlock-investment",
+    "break-investment",
+    "button-next",
+    "user-settings-menu-icon",
+    "investing-menu-icon",
+    "trade-menu-icon",
+    ...[...document.getElementsByClassName("set_timefr")].map(element_ => element_.id)
+]
+const buttons_click_change_color_args = [
+    [
+        "rgb(255, 180, 180) rgb(245, 130, 70) rgb(180, 20, 20) rgb(210, 40, 35)",
+        "rgb(255, 60, 0)",
+        1
+    ],
+    [
+        "rgb(200, 255, 180) rgb(127, 255, 0) rgb(80, 160, 40) rgb(10, 110, 10)",
+        "rgb(127, 255, 0)",
+        0
+    ]
+]
+
+for (let args_ of buttons_click_change_color_args) {
+    for (let button_id_ of buttons_click_change_color) {
+        clickSetColorEventListener(
+            button_id_, ...args_
+        );
+    }    
 }

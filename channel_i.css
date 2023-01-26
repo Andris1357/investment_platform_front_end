@@ -182,43 +182,36 @@
     }
     .header-left, .header-right {
         margin: 0px;
+        border-width: 0 0 var(--v_border) 0; /* top right bottom left */
+        border-style: solid;
+        border-color: rgb(17, 42, 5);
+        background-color: black;
+        height: 25px;
         /* display: inline-block; */
         /* display: grid */
     }
     :root {
-        --v_padding: 4px;
+        --v_padding: 10px;
         --v_border: 4px;
     }
     .header-right {
-        border-width: var(--v_border) var(--v_border) 
-        var(--v_border) 0; /* top right bottom left */
-        border-style: solid;
-        border-color: rgb(17, 16, 16);
-        background-color: black;
-        height: fit-content;
         float: right;
         text-align: right;
         grid-area: header2;
-        width: calc(50% - var(--v_border));
+        width: 50%;
         padding: var(--v_padding) 0;
     }
     .header-left {
-        border-width: var(--v_border) 0 
-        var(--v_border) var(--v_border); /* top right bottom left */
-        border-style: solid;
-        border-color: rgb(17, 16, 16);
-        background-color: black;
         float: left;
         grid-area: header1;
         text-align: left;
-        height: 25px;
-        width: calc(50% - var(--v_border));
-        height: 25px;
-        padding: var(--v_border) 0;
+        width: 50%;
+        padding: var(--v_padding) 0;
     }
-    .fa-user, .fa-chart-line {
+    .fa-user, .fa-chart-line, .fa-coins {
         color: chartreuse;
         font-size: 24px;
+        padding: 0 7px 7px 0;
     }
     .space {
         display: inline-block;
@@ -233,12 +226,12 @@
     #static-attributes {
         width: 100%;
     }
-    #username {
+    #wallet-address, #token-balance {
         background-color: rgba(0,0,0,0);
         display: inline;
         width:fit-content;
         color: chartreuse;
-        font-size: 15px;
+        font-size: 13px;
         border-width: 0px;
         padding: 0px;
         width: 140px;

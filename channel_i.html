@@ -18,17 +18,23 @@
 	<div id="root"></div>
 	<body>
 		<div id="wrapper">
-			<!-- TD: integrate button hover anim :: borders sh coalesce w the border of hover anim -->
+			<!-- MT: integrate button hover anim :: borders sh coalesce w the border of hover anim -->
 			<!-- MT: page for buying & selling tokens ß eth, administering own account that changes based on whether the user :: (investor|channel owner) <= React -->
-			<!-- jelenleg a headerek nem képezik a grid részét mert nem a .container alatt vannak -><- ha berakom, a szélessége összeesik, a chart megfelelő helyre kerül \ container még mindig túlnyúlik jobbra -->
-			<div class="header-left"></div>
+			<!-- ??: jelenleg a headerek nem képezik a grid részét mert nem a .container alatt vannak -><- ha berakom, a szélessége összeesik, a chart megfelelő helyre kerül \ container még mindig túlnyúlik jobbra -->
+			<div id="header-left" class="header-left">
+				<div class="space"></div>
+				<i id="user-settings-menu-icon" class="far fa-user" name="menu-icon"></i>
+				<i id="investing-menu-icon" class="fas fa-chart-line" name="menu-icon"></i>
+				<i id="trade-menu-icon" class="fas fa-coins" name="menu-icon"></i>
+			</div>
 			<div class="header-right">
-				<input type="text" id="username" disabled value="wallet_hash" />
+				<label for="wallet-address" style="color: chartreuse; font-size: 13px">Wallet address</label>
 				<div class="space"></div>
-				<i class="far fa-user"></i>
+				<input type="text" id="wallet-address" disabled value="0x742d35Cc6634C0532925a3b844Bc454e4438f44e" />
 				<div class="space"></div>
-				<i class="fas fa-chart-line"></i>
+				<label for="token-balance" style="color: chartreuse; font-size: 13px;">Token balance</label>
 				<div class="space"></div>
+				<input type="text" id="token-balance" disabled value="74992" />
 			</div>
 			<div class="overlay" id="overlay_id">
 				<div class="overlay_centre_img">

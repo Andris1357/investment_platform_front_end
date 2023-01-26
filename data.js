@@ -163,22 +163,19 @@ export const space_style = {
 export const chart_button_selected_style = {
     color: "rgb(255, 60, 0)", 
     borderColor: "rgb(255, 180, 180) rgb(245, 130, 70) rgb(180, 20, 20) rgb(210, 40, 35)"
-}
+};
+export const menu_icon_style = {
+    color: "chartreuse",
+    fontSize: "24px",
+    padding: "0 0 7px 15px",
+};
 
 const first_date = Date.now() - 3.1536 * 10 ** 10; //later subst w first recorded date
 const labels_full = Array.from(
     {length: timeseries_max_length}, 
     (_, index) => {
         let date_i = new Date(first_date + index * index_update_frequency * 3.6 * 10 ** 6);
-        return "" 
-            + date_i.getFullYear() 
-            + "-" 
-            + (date_i.getMonth() + 1) 
-            + "-" 
-            + date_i.getDate() 
-            + ". " 
-            + date_i.getHours() 
-            + ":00" // LT: later switch to datetime of db row
+        return `${date_i.getFullYear()}-${date_i.getMonth() + 1}-${date_i.getDate()}.${date_i.getHours()}:00` // LT: later switch to datetime of db row
     }
 ); // I: only shows 7-10 labels in total -> label is null if index %% arr.slice.length/10 != 0
 export const labels_1_3 = Array.from(
