@@ -46,14 +46,14 @@ function clickSetColorEventListener(button_id_, edges_, font_, event_) {
     element.addEventListener(event_ ? "mousedown" : "mouseup", callable);
 }
 
-function wrapChartElement(context_, data_, labels_) {
+function wrapChartElement(context_, data_, labels_, channel_name_) {
     return new Chart(context_, {
         type: "line",
         data: {
             labels: labels_, //omit labels for part of values, so th they can fit on screen -> about 7-10; how to make a label blank?; will this get updated along w values?
             datasets: [
                 { // NOW: insert channel name when reassigning .label
-                    label: "Changes in index of [] channel", //mellette info ikon -> "The chart will show index fluctuations over a recent interval, the span of which can be selected on the top right"
+                    label: `Changes in index of ${channel_name_}`, //mellette info ikon -> "The chart will show index fluctuations over a recent interval, the span of which can be selected on the top right"
                     data: data_, //TD: chg to arr.slice (1d) or other to be default
                     backgroundColor: ["rgba(0,0,0,0.95)"],
                     borderColor: ["rgba(77, 185, 45)"], // I: sets color of points
@@ -82,7 +82,13 @@ function wrapChartElement(context_, data_, labels_) {
                     fontColor: "chartreuse" // /\: this does not work currently
                 }
             },
-        },
+            layout: {
+                padding: {
+                    right: "15px",
+                    left: "15px"
+                }
+            }
+        }
     });
 }
 
@@ -137,12 +143,15 @@ const ChartComponent = ({timeframe_, channel_index_}) => {
             chart_global = wrapChartElement(
                 context,
                 calculated_timeseries,
-                calculated_labels
+                calculated_labels,
+                Data.channels[channel_index_].name
             );
         } 
         else if (chart_ref.current && chart_global) {
             chart_global.data.datasets[0].data = calculated_timeseries;
             chart_global.data.labels = calculated_labels;
+            console.log(calculated_labels)
+            chart_global.data.datasets[0].label = `Changes in index of ${Data.channels[channel_index_].name}`;
             chart_global.update();
         }
     }, [chart_ref, timeframe_, calculated_timeseries, calculated_labels])
@@ -185,7 +194,7 @@ const ChartArea = () => {
         <div class="chart_wrap">
             <ChartComponent timeframe_={selected_timeframe} channel_index_={selected_channel_index}/>
             <div class="chart_navbar">
-                <button class="set_timefr" id="tf_d" value="24" onClick={updateChart}>1d</button>
+                <button class="set_timefr" id="tf_d" value="24" style={{marginLeft: "15px"}} onClick={updateChart}>1d</button>
                 <button class="set_timefr" id="tf_w" value="168" onClick={updateChart}>1w</button>
                 <button class="set_timefr" id="tf_m" value="720" onClick={updateChart}>1m</button>
                 <button
@@ -516,7 +525,6 @@ const App = () => {
     }
     $("overlay_id").style.setProperty("visibility", "hidden"); // LT: only become hidden /\ both ~ & js script loaded -> component th has custom attr ß storing whether some script loaded (prob ~ bc ~::first)
 }
-
 ReactDOM.render(<App/>, $("root"))
 
 const info_timeseries = [...document.getElementsByClassName("info_hover_anchor")];
