@@ -150,7 +150,6 @@ const ChartComponent = ({timeframe_, channel_index_}) => {
         else if (chart_ref.current && chart_global) {
             chart_global.data.datasets[0].data = calculated_timeseries;
             chart_global.data.labels = calculated_labels;
-            console.log(calculated_labels)
             chart_global.data.datasets[0].label = `Changes in index of ${Data.channels[channel_index_].name}`;
             chart_global.update();
         }
